@@ -1,6 +1,6 @@
 // Assembles only the public site for GitHub Pages: pages, assets, styles and browser modules.
 // Usage: node scripts/build-site.mjs [outDir]   (default: _site)
-import { cpSync, mkdirSync, rmSync } from 'node:fs';
+import { cpSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, relative, resolve } from 'node:path';
 import { unsafeOut } from './safe-out.mjs';
@@ -22,6 +22,8 @@ for (const file of [...pages, 'sitemap.xml', 'hablemos.html']) {
   cpSync(join(root, file), join(out, file));
 }
 for (const dir of ['assets', 'styles']) cpSync(join(root, dir), join(out, dir), { recursive: true });
+// GitHub Pages serves this artifact on the custom domain only while the artifact declares it
+writeFileSync(join(out, 'CNAME'), 'paranexo.com\n');
 // browser modules only: the template and the figure HTML are build inputs
 cpSync(join(root, 'src'), join(out, 'src'), { recursive: true, filter: path => !path.endsWith('.html') });
 console.log(`Site built in ${relative(root, out) || out}`);

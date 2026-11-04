@@ -4,7 +4,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { CONTACT } from '../src/contact-message.mjs';
 
 const read = path => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
-const SITE = 'https://tanoluchi.github.io/paranexo/';
+const SITE = 'https://paranexo.com/';
 const html = read('index.html');
 
 test('the home declares its public URL', () => {

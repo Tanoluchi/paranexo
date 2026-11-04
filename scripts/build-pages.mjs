@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { CONTACT, whatsappHref } from '../src/contact-message.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SITE = 'https://tanoluchi.github.io/paranexo/';
+const SITE = 'https://paranexo.com/';
 const read = path => readFileSync(join(root, path), 'utf8');
 const partial = name => read(`src/partials/${name}.html`);
 
