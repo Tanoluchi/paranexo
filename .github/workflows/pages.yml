@@ -1,6 +1,7 @@
-# Publishes only the built site (_site/) to GitHub Pages, after the tests pass.
+# Publishes only the built site (_site/) to GitHub Pages, after the tests pass, and mirrors it
+# to Cloudflare Pages when the CLOUDFLARE_API_TOKEN secret exists.
 # Repository setting required once: Settings → Pages → Build and deployment → Source: GitHub Actions.
-name: Deploy site to GitHub Pages
+name: Deploy site
 
 on:
   push:
@@ -23,6 +24,10 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    # Tokens live at job level so the Cloudflare step can tell whether they were configured.
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -44,3 +49,8 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v5
+      # Same artifact, second host: paranexo.com is served by Cloudflare Pages, which a
+      # Direct Upload project feeds from here, so nothing is built twice.
+      - name: Deploy to Cloudflare Pages
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: npx --yes wrangler@4 pages deploy _site --project-name=paranexo --branch=${{ github.ref_name }}
