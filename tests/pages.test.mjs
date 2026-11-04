@@ -121,16 +121,12 @@ test('every page loads the shared page module, which runs its own reveal and dem
   }
 });
 
-test('the home keeps one diagnosis, five linked steps and no stale form copy', () => {
+test('the home keeps one diagnosis and no stale form copy', () => {
   const home = read('index.html');
-  // the pains band now opens the problems section instead of owning its own one
-  const problems = home.match(/<section id="problemas"[\s\S]*?<\/section>/)?.[0] ?? '';
-  assert.match(problems, /class="pains-band"/);
-  assert.equal((home.match(/class="pains-band"/g) ?? []).length, 1);
-  // five steps that match the process page, each linking to it
-  const rail = home.match(/<ol class="rail reveal-items">[\s\S]*?<\/ol>/)?.[0] ?? '';
-  assert.equal((rail.match(/<li>/g) ?? []).length, 5);
-  assert.match(home, /href="\.\/como-trabajamos\/">Ver cómo trabajamos/);
+  // neither the pains marquee nor the numbered process rail lives on the home
+  assert.doesNotMatch(home, /class="pains-band"|class="pains-track"|src="\.\/src\/pains\.mjs"/);
+  assert.doesNotMatch(home, /class="rail[ "]/);
+  assert.doesNotMatch(home, /Ver cómo trabajamos, paso por paso/);
   assert.doesNotMatch(home, /class="steps"/);
   // nothing on the home claims the form does not send
   assert.doesNotMatch(home, /todavía no envía|no está habilitado/);

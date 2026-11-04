@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 
 test('landing keeps every major editorial section and real local artwork', () => {
-  for (const id of ['contenido', 'top', 'problemas', 'como-trabajamos', 'quienes-somos', 'preguntas', 'hablemos']) {
+  for (const id of ['contenido', 'top', 'problemas', 'servicios', 'preguntas', 'hablemos']) {
     assert.match(html, new RegExp(`id="${id}"`));
   }
   assert.match(html, /assets\/footer-taller\.jpg/);
@@ -16,10 +16,9 @@ test('landing keeps every major editorial section and real local artwork', () =>
   assert.match(html, /<script type="module" src="\.\/src\/landing\.mjs"><\/script>/);
 });
 
-test('landing exposes the canvas page-one structure and keeps the demos on their own pages', () => {
+test('landing exposes the canvas page-one structure', () => {
   for (const pattern of [
-    /class="pains-band"/, /class="team-wrap/, /class="process-banner/, /class="wrap faq-grid/,
-    /Las personas.*detrás de cada sistema</,
+    /class="wrap faq-grid/,
   ]) assert.match(html, pattern);
   // the three demos live on their service pages, not on the home
   assert.doesNotMatch(html, /id="fig-(ba|flow|bot)"/);
@@ -114,18 +113,21 @@ test('if the landing module never runs, the reveal gate lifts so content is not 
 });
 
 test('team cards lead with their role, with no empty photo frames', () => {
-  assert.doesNotMatch(html, /portrait empty/);
-  assert.doesNotMatch(html, /Foto 4:5/);
-  assert.doesNotMatch(html, /<h3[^>]*>\s*Equipo Puente NEA/);
-  const members = html.match(/<article class="member[^"]*">[\s\S]*?<\/article>/g) ?? [];
+  const about = readFileSync(new URL('../quienes-somos/index.html', import.meta.url), 'utf8');
+  assert.doesNotMatch(about, /portrait empty/);
+  assert.doesNotMatch(about, /Foto 4:5/);
+  assert.doesNotMatch(about, /<h3[^>]*>\s*Equipo Puente NEA/);
+  const members = about.match(/<article class="member[^"]*">[\s\S]*?<\/article>/g) ?? [];
   assert.equal(members.length, 2);
   const roles = ['Ingeniería y producto', 'Automatización e IA'];
   members.forEach((m, i) => assert.match(m, new RegExp(`<h3[^>]*>\\s*${roles[i]}\\s*</h3>`)));
 });
 
-test('servicios carousel sits between Problemas and Cómo trabajamos with all seven services', () => {
+test('servicios carousel sits between El problema and the FAQ with all seven services', () => {
   const at = id => html.indexOf(`id="${id}"`);
-  assert.ok(at('servicios') > at('problemas') && at('como-trabajamos') > at('servicios'));
+  assert.ok(at('problemas') > -1 && at('servicios') > at('problemas') && at('preguntas') > at('servicios'));
+  // the home keeps no process section of its own; /como-trabajamos/ owns those steps
+  assert.doesNotMatch(html, /id="como-trabajamos"|class="process-head/);
   const section = html.match(/<section[^>]*id="servicios"[^>]*>[\s\S]*?<\/section>/)?.[0] ?? '';
   assert.match(section, /aria-labelledby="/);
   for (const title of ['Software a medida', 'Automatizaciones', 'Bots', 'Agentes', 'IA para tu negocio', 'Diseño de páginas web', 'Integraciones']) {
@@ -135,7 +137,7 @@ test('servicios carousel sits between Problemas and Cómo trabajamos with all se
   assert.match(section, /<ul class="svc-track[^"]*"[^>]*aria-label="/);
   assert.match(section, /<button[^>]*aria-label="Servicio anterior"/);
   assert.match(section, /<button[^>]*aria-label="Servicio siguiente"/);
-  // the process banner right below owns the "Contanos qué necesitás" button; here it is a quiet text link
+  // the carousel CTA stays a quiet text link next to the seven cards
   assert.doesNotMatch(section, /Contanos qué necesitás|class="btn/);
   assert.match(section, /<p class="lead">[^<]*<a href="\.\/contacto\/">contanos<\/a><\/p>/);
   assert.doesNotMatch(section, /class="num"|Siete formas/);
