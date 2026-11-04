@@ -32,15 +32,15 @@ test('landing exposes the canvas page-one structure', () => {
 });
 
 test('every contact call to action opens a separate, honest three-step form', () => {
-  assert.doesNotMatch(html, /04-hablemos\.html|hola@puentenea\.com|Nombre Apellido|href="#hablemos"/);
+  assert.doesNotMatch(html, /04-hablemos\.html|hola@paranexo\.com|Nombre Apellido|href="#hablemos"/);
   assert.ok((html.match(/href="\.\/contacto\/"/g) || []).length >= 5);
   const form = readFileSync(new URL('../contacto/index.html', import.meta.url), 'utf8');
   for (const name of ['name', 'business', 'channel', 'contact', 'topic', 'problem']) {
     assert.match(form, new RegExp(`name="${name}"`));
   }
   // real destination (the team's confirmed address), no invented address and no response-time promise
-  assert.match(form, /holapuentenea@gmail\.com/);
-  assert.doesNotMatch(form, /hola@puentenea\.com|menos de 24 h|tu consulta le llega/);
+  assert.match(form, /holaparanexo@gmail\.com/);
+  assert.doesNotMatch(form, /hola@paranexo\.com|menos de 24 h|tu consulta le llega/);
 });
 
 const css = (path) => readFileSync(new URL(`../styles/${path}`, import.meta.url), 'utf8');
@@ -116,7 +116,7 @@ test('team cards lead with their role, with no empty photo frames', () => {
   const about = readFileSync(new URL('../quienes-somos/index.html', import.meta.url), 'utf8');
   assert.doesNotMatch(about, /portrait empty/);
   assert.doesNotMatch(about, /Foto 4:5/);
-  assert.doesNotMatch(about, /<h3[^>]*>\s*Equipo Puente NEA/);
+  assert.doesNotMatch(about, /<h3[^>]*>\s*Equipo Paranexo/);
   const members = about.match(/<article class="member[^"]*">[\s\S]*?<\/article>/g) ?? [];
   assert.equal(members.length, 2);
   const roles = ['Ingeniería y producto', 'Automatización e IA'];

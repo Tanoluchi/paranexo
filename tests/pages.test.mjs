@@ -8,7 +8,7 @@ import { PAGES } from '../scripts/build-pages.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = path => readFileSync(join(root, path), 'utf8');
-const SITE = 'https://tanoluchi.github.io/puente_nea/';
+const SITE = 'https://tanoluchi.github.io/paranexo/';
 const published = PAGES.map(page => page.out);
 
 test('every page ships one h1, the shared nav and its own canonical url', () => {

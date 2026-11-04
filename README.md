@@ -1,6 +1,6 @@
-# Puente NEA
+# Paranexo
 
-Landing estática de Puente NEA: software a medida, automatización e IA para pymes. Las tres demostraciones son **ilustrativas**; no modifican pedidos ni datos reales.
+Landing estática de Paranexo: software a medida, automatización e IA para pymes. Las tres demostraciones son **ilustrativas**; no modifican pedidos ni datos reales.
 
 ## Verla en local
 
@@ -26,11 +26,11 @@ GitHub Pages publica solo el sitio, no el repositorio: `.github/workflows/pages.
 
 ## Antes de publicarla
 
-El sitio se publica en GitHub Pages: https://tanoluchi.github.io/puente_nea/ (lo usan `canonical`, `og:url` y `sitemap.xml`).
+El sitio se publica en GitHub Pages: https://tanoluchi.github.io/paranexo/ (lo usan `canonical`, `og:url` y `sitemap.xml`).
 
 Los enlaces «Hablemos» llevan a `contacto/`, un formulario de tres pasos; `hablemos.html` quedó como redirección para los enlaces ya compartidos. Los destinos de contacto están en `src/contact-message.mjs`:
 
-- `email`: holapuentenea@gmail.com.
+- `email`: holaparanexo@gmail.com.
 - `whatsapp`: **número de ejemplo** (+54 9 379 000-0000). Cambialo antes de publicar, en ese archivo y en `src/pages/contacto.html`; las páginas lo toman de ahí al correr `node scripts/build-pages.mjs`.
 - `endpoint`: URL del backend propio. Vacío, el último paso abre el correo del visitante con la consulta armada. Con una URL, el formulario hace `POST` en JSON con `name`, `business`, `channel`, `contact`, `topics`, `problem` y `website`; el backend debe descartar los envíos con `website` completo (es una trampa para bots) y permitir el origen `https://tanoluchi.github.io` (CORS).
 

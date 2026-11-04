@@ -7,7 +7,7 @@ const read = path => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8'
 const sample = { name: ' Laura Gómez ', business: '', channel: 'whatsapp', contact: '379 412-3456', topics: ['Planillas y stock'], problem: 'Llevamos el stock en tres planillas.', website: '' };
 
 test('contact destinations: confirmed email, example WhatsApp, no backend yet', () => {
-  assert.equal(CONTACT.email, 'holapuentenea@gmail.com');
+  assert.equal(CONTACT.email, 'holaparanexo@gmail.com');
   assert.match(CONTACT.whatsapp, /^549\d{10}$/);
   assert.equal(CONTACT.endpoint, '');
 });
@@ -26,7 +26,7 @@ test('the message names the person when the business is left empty', () => {
 
 test('mailto opens a prefilled email to the team address', () => {
   const href = mailtoHref(sample);
-  assert.ok(href.startsWith('mailto:holapuentenea@gmail.com?subject='));
+  assert.ok(href.startsWith('mailto:holaparanexo@gmail.com?subject='));
   const params = new URLSearchParams(href.split('?')[1]);
   assert.deepEqual({ subject: params.get('subject'), body: params.get('body') }, messageOf(sample));
 });
