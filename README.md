@@ -20,14 +20,12 @@ Cada archivo de `src/pages/` arranca con un bloque `<!-- page {...} -->` que fij
 
 El sitio vive en **paranexo.com**, servido por Cloudflare Pages, y tiene un espejo en GitHub Pages. Un solo workflow, `.github/workflows/pages.yml`, corre los tests y, si pasan, arma `_site/` con `node scripts/build-site.mjs` y sube ese mismo artefacto a los dos lados: nunca se construye dos veces.
 
-Quedan afuera `design/`, `odd/`, `docs/`, los tests, los scripts, las fuentes de `src/` (solo se publican los módulos del navegador) y los archivos internos.
+Quedan afuera `design/`, `odd/`, los tests, los scripts, las fuentes de `src/` (solo se publican los módulos del navegador) y los archivos internos.
 
 - Se ejecuta en cada push a `master` o a mano desde la pestaña Actions.
 - Cloudflare Pages usa el proyecto `paranexo` (Direct Upload); necesita los secrets `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID`. Sin token, el paso se saltea y el deploy de GitHub Pages sigue publicando.
 - Configuración necesaria una sola vez en GitHub: Settings → Pages → Build and deployment → Source: **GitHub Actions**.
 - Para ver lo que se publicaría: `node scripts/build-site.mjs` y servir `_site/` (`python3 -m http.server 8000 -d _site`). El script se niega a escribir en el repositorio o en una carpeta que lo contenga, porque borra la carpeta de salida antes de copiar.
-
-El DNS, los certificados, la regla de `www` y el rollback están documentados fuera del repo, en `~/Documents/paranexo-dominio.md` (referencia) y `~/Documents/paranexo-deploy-paso-a-paso.md` (bitácora con los comandos).
 
 ## Antes de publicarla
 
