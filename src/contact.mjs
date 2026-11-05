@@ -11,6 +11,19 @@ const notices = [noticeMail, noticeSent, noticeError];
 const SEND_LABEL = 'Enviar consulta →';
 const contact = form.elements.contact;
 let current = 0;
+// Deploy-time public Turnstile sitekey: replace before deploying the protected form.
+const TURNSTILE_SITEKEY = '0x4AAAAAAF1TvNJXWekMBnQ4';
+const useEmail = location.hostname === 'tanoluchi.github.io';
+let widget;
+if (!useEmail && TURNSTILE_SITEKEY) {
+  const script = document.createElement('script');
+  script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+  script.async = true;
+  script.onload = () => {
+    widget = window.turnstile.render('#turnstile', { sitekey: TURNSTILE_SITEKEY });
+  };
+  document.head.append(script);
+}
 
 function validate(field) {
   const value = field.value.trim();
@@ -67,11 +80,13 @@ const formData = () => ({
 
 async function send() {
   const data = formData();
-  // No backend yet: hand a prefilled email to the visitor's mail app
-  if (!CONTACT.endpoint) {
+  // GitHub Pages has no Pages Function; hand off to the visitor's mail app.
+  if (useEmail || !CONTACT.endpoint) {
     document.getElementById('mail-link').href = mailtoHref(data);
     return showNotice(noticeMail);
   }
+  const token = widget !== undefined && window.turnstile?.getResponse(widget);
+  if (!token) return showNotice(noticeError);
   next.disabled = true;
   next.setAttribute('aria-busy', 'true');
   next.textContent = 'Enviando…';
@@ -79,7 +94,7 @@ async function send() {
     const response = await fetch(CONTACT.endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payloadOf(data)),
+      body: JSON.stringify({ ...payloadOf(data), turnstileToken: token }),
       signal: AbortSignal.timeout(15000),
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -90,6 +105,7 @@ async function send() {
     // keep everything typed so the visitor can retry or write by email
     showNotice(noticeError);
   } finally {
+    if (widget !== undefined) window.turnstile?.reset(widget);
     next.disabled = false;
     next.removeAttribute('aria-busy');
     next.textContent = SEND_LABEL;

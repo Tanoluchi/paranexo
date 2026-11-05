@@ -114,3 +114,53 @@ test('the published form posts to the Pages Function that reads the secret from 
   assert.match(fn, /env\.RESEND_API_KEY/);
   assert.doesNotMatch(fn, /re_[A-Za-z0-9]{8,}/); // no key in the repository
 });
+
+test('unverified requests and simple cross-origin requests cannot send mail', async () => {
+  const { onRequestPost } = await import('../functions/api/contact.js');
+  const plain = new Request('https://paranexo.com/api/contact', { method: 'POST', headers: { 'Content-Type': 'text/plain', Origin: 'https://evil.example' }, body: JSON.stringify(valid) });
+  assert.equal((await onRequestPost({ request: plain, env: {} })).status, 415);
+  const json = new Request('https://paranexo.com/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(valid) });
+  assert.equal((await onRequestPost({ request: json, env: {} })).status, 503);
+});
+
+test('Turnstile verifies the token and hostname before sending', async () => {
+  const { onRequestPost } = await import('../functions/api/contact.js');
+  const original = globalThis.fetch; const calls = [];
+  try {
+    globalThis.fetch = async (url) => { calls.push(url); return url.includes('siteverify') ? { ok: true, json: async () => ({ success: true, hostname: 'evil.example' }) } : { ok: true }; };
+    const request = new Request('https://paranexo.com/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...valid, turnstileToken: 'test-token' }) });
+    const result = await onRequestPost({ request, env: { TURNSTILE_SECRET_KEY: 'test-secret', RESEND_API_KEY: 'test-key' } });
+    assert.equal(result.status, 403); assert.equal(calls.length, 1);
+  } finally { globalThis.fetch = original; }
+});
+
+test('only a successful verification for paranexo.com reaches Resend', async () => {
+  const { onRequestPost } = await import('../functions/api/contact.js');
+  const original = globalThis.fetch;
+  try {
+    for (const [verification, expected, count] of [[{ success: true, hostname: 'paranexo.com' }, 200, 2], [{ success: false, hostname: 'paranexo.com' }, 403, 1]]) {
+      const calls = []; globalThis.fetch = async url => { calls.push(url); return calls.length === 1 ? { ok: true, json: async () => verification } : { ok: true }; };
+      const request = new Request('https://paranexo.com/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...valid, turnstileToken: 'token' }) });
+      assert.equal((await onRequestPost({ request, env: { TURNSTILE_SECRET_KEY: 'test', RESEND_API_KEY: 'test' } })).status, expected); assert.equal(calls.length, count);
+    }
+  } finally { globalThis.fetch = original; }
+});
+
+test('alternate Pages host cannot reach verification or email', async () => {
+  const { onRequestPost } = await import('../functions/api/contact.js'); const original = globalThis.fetch; let calls = 0;
+  try { globalThis.fetch = async () => { calls++; throw new Error('unexpected fetch'); };
+    const request = new Request('https://paranexo.pages.dev/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...valid, turnstileToken: 'token' }) });
+    assert.equal((await onRequestPost({ request, env: { TURNSTILE_SECRET_KEY: 'test', RESEND_API_KEY: 'test' } })).status, 403); assert.equal(calls, 0);
+  } finally { globalThis.fetch = original; }
+});
+
+test('verification errors, missing, oversized and reused tokens never reach Resend', async () => {
+  const { onRequestPost } = await import('../functions/api/contact.js'); const original = globalThis.fetch;
+  try {
+    for (const [token, mode, expected, count] of [['', 'success', 403, 0], ['x'.repeat(2049), 'success', 403, 0], ['token', 'network', 503, 1], ['token', 'http', 403, 1], ['token', 'reused', 403, 1]]) {
+      const calls = []; globalThis.fetch = async url => { calls.push(url); if (mode === 'network') throw new Error('offline'); return { ok: mode !== 'http', json: async () => ({ success: mode === 'success', hostname: 'paranexo.com', 'error-codes': ['timeout-or-duplicate'] }) }; };
+      const request = new Request('https://paranexo.com/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...valid, turnstileToken: token }) });
+      assert.equal((await onRequestPost({ request, env: { TURNSTILE_SECRET_KEY: 'test', RESEND_API_KEY: 'test' } })).status, expected); assert.equal(calls.length, count);
+    }
+  } finally { globalThis.fetch = original; }
+});
