@@ -4,7 +4,7 @@ export const CONTACT = {
   // shortcut: example number (+54 9 379 000-0000) until the team picks one; also in hablemos.html
   whatsapp: '5493790000000',
   // URL of the team's backend (POST, JSON). Empty: the form hands a prefilled email to the visitor's mail app.
-  endpoint: '',
+  endpoint: '/api/contact',
 };
 
 const clean = value => String(value ?? '').trim();

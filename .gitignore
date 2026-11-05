@@ -6,3 +6,9 @@ design/**/.screenshots/
 
 # Built site for GitHub Pages (scripts/build-site.mjs)
 _site/
+
+# Local secrets for `wrangler pages dev`
+.dev.vars
+
+# Wrangler local state (pages dev)
+.wrangler/

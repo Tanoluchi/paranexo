@@ -6,10 +6,10 @@ import { CONTACT, messageOf, mailtoHref, payloadOf, whatsappHref } from '../src/
 const read = path => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const sample = { name: ' Laura Gómez ', business: '', channel: 'whatsapp', contact: '379 412-3456', topics: ['Planillas y stock'], problem: 'Llevamos el stock en tres planillas.', website: '' };
 
-test('contact destinations: confirmed email, example WhatsApp, no backend yet', () => {
+test('contact destinations: confirmed email, example WhatsApp, Pages Function endpoint', () => {
   assert.equal(CONTACT.email, 'hola@paranexo.com');
   assert.match(CONTACT.whatsapp, /^549\d{10}$/);
-  assert.equal(CONTACT.endpoint, '');
+  assert.equal(CONTACT.endpoint, '/api/contact');
 });
 
 test('the message names the person when the business is left empty', () => {
