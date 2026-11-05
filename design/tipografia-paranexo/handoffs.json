@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "chosen": "03-revista-de-filo.html",
+  "handoffs": {
+    "03-revista-de-filo.html": {
+      "status": "implemented",
+      "queued": false,
+      "sentAt": "2026-11-05T20:36:38.502Z",
+      "startedAt": "2026-11-05T20:36:47.187Z",
+      "implementedAt": "2026-11-05T20:40:35.690Z",
+      "note": "Instrument Serif en títulos (.hero h1 104px, h2 62px) y Archivo en texto; @font-face self-hosted, preload y design/system.md sincronizados. 91 tests verdes.",
+      "previewUrl": "http://127.0.0.1:8000/"
+    }
+  }
+}

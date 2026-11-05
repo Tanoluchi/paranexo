@@ -4,7 +4,7 @@
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CONTACT, whatsappHref } from '../src/contact-message.mjs';
+import { CONTACT } from '../src/contact-message.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://paranexo.com/';
@@ -61,7 +61,6 @@ function render(page) {
     OG_TITLE: page.ogTitle ?? page.title,
     OG_DESCRIPTION: page.ogDescription ?? page.description,
     CONTACT_EMAIL: CONTACT.email,
-    WHATSAPP_HREF: whatsappHref('Hola, quiero hacer una consulta'),
   });
 }
 

@@ -1,8 +1,6 @@
 // Where contact requests go. One place to change them.
 export const CONTACT = {
   email: 'hola@paranexo.com',
-  // shortcut: example number (+54 9 379 000-0000) until the team picks one; also in hablemos.html
-  whatsapp: '5493790000000',
   // URL of the team's backend (POST, JSON). Empty: the form hands a prefilled email to the visitor's mail app.
   endpoint: '/api/contact',
 };
@@ -39,8 +37,4 @@ export function messageOf(data) {
 export function mailtoHref(data, to = CONTACT.email) {
   const { subject, body } = messageOf(data);
   return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
-
-export function whatsappHref(text, number = CONTACT.whatsapp) {
-  return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
 }

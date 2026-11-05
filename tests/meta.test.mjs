@@ -35,11 +35,11 @@ test('the share image is the finished hero at 1200x630 and ships with the site',
   assert.deepEqual(jpegSize('assets/og-puente.jpg'), { width: 1200, height: 630 });
 });
 
-test('the home footer reaches the team by form, email and WhatsApp, and links the privacy policy', () => {
+test('the home footer offers form and email without a public WhatsApp number', () => {
   const footer = html.match(/<footer class="footer">[\s\S]*?<\/footer>/)[0];
   assert.match(footer, /href="\.\/contacto\/"/);
   assert.match(footer, new RegExp(`href="mailto:${CONTACT.email}"`));
-  assert.match(footer, new RegExp(`href="https://wa\\.me/${CONTACT.whatsapp}\\?text=`));
+  assert.doesNotMatch(footer, /https:\/\/(?:wa\.me|api\.whatsapp\.com)\//i);
   assert.match(footer, /href="\.\/privacidad\.html"/);
   assert.doesNotMatch(footer, /Envío pendiente/);
   assert.doesNotMatch(html, /\{\{[A-Z_]+\}\}/, 'every build placeholder is filled');

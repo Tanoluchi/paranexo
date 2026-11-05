@@ -1,14 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
-import { CONTACT, messageOf, mailtoHref, payloadOf, whatsappHref } from '../src/contact-message.mjs';
+import { CONTACT, messageOf, mailtoHref, payloadOf } from '../src/contact-message.mjs';
 
 const read = path => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const sample = { name: ' Laura Gómez ', business: '', channel: 'whatsapp', contact: '379 412-3456', topics: ['Planillas y stock'], problem: 'Llevamos el stock en tres planillas.', website: '' };
 
-test('contact destinations: confirmed email, example WhatsApp, Pages Function endpoint', () => {
+test('contact destinations: confirmed email and Pages Function endpoint', () => {
   assert.equal(CONTACT.email, 'hola@paranexo.com');
-  assert.match(CONTACT.whatsapp, /^549\d{10}$/);
+  assert.equal(CONTACT.whatsapp, undefined);
   assert.equal(CONTACT.endpoint, '/api/contact');
 });
 
@@ -35,15 +35,12 @@ test('the backend payload is trimmed and keeps the honeypot for the server to ch
   assert.deepEqual(payloadOf(sample), { name: 'Laura Gómez', business: '', channel: 'whatsapp', contact: '379 412-3456', topics: ['Planillas y stock'], problem: 'Llevamos el stock en tres planillas.', website: '' });
 });
 
-test('whatsapp links carry a short prefilled greeting', () => {
-  assert.equal(whatsappHref('Hola'), `https://wa.me/${CONTACT.whatsapp}?text=Hola`);
-});
-
 test('the contact page offers real destinations, a honeypot and the privacy policy', () => {
   const page = read('contacto/index.html');
   assert.doesNotMatch(page, /envío todavía no está habilitado|todavía no se envían ni se guardan/i);
   assert.match(page, new RegExp(`href="mailto:${CONTACT.email}"`));
-  assert.match(page, new RegExp(`href="https://wa\\.me/${CONTACT.whatsapp}\\?text=`));
+  assert.doesNotMatch(page, /https:\/\/(?:wa\.me|api\.whatsapp\.com)\//i);
+  assert.match(page, /name="channel" value="whatsapp"/);
   assert.match(page, /<input[^>]*name="website"[^>]*tabindex="-1"/);
   assert.match(page, /href="\.\.\/privacidad\.html"/);
   for (const id of ['notice-mail', 'notice-sent', 'notice-error']) assert.match(page, new RegExp(`id="${id}"[^>]*hidden`));

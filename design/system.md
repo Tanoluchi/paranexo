@@ -51,13 +51,14 @@ Source: `styles/landing.css`.
 
 | Token / role | Value |
 | --- | --- |
-| `--serif` | `ui-serif, "New York", "Iowan Old Style", "Palatino Linotype", Georgia, serif` (headings, weight 500, letter-spacing -.02em) |
-| `--sans` | `ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif` (body 17px/1.6) |
+| `--serif` | `"Instrument Serif", ui-serif, "New York", "Iowan Old Style", "Palatino Linotype", Georgia, serif` (headings, weight 400 only, letter-spacing -.005em; hierarchy comes from size and measure, never weight) |
+| `--sans` | `"Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif` (body 17px/1.6) |
 | `--mono` | `ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace` (eyebrow, meta, counters) |
-| h1 | `clamp(44px, 6vw, 84px)` / .98 |
-| h2 | `clamp(36px, 4.4vw, 56px)` / 1.05 |
+| `.hero h1` | `clamp(46px, 6.9vw, 104px)` / .95, two lines from 768px |
+| `.cta h2` | `clamp(54px, 7.6vw, 112px)` / .92 |
+| h2 | `clamp(38px, 4.8vw, 62px)` / 1.02 |
 | h3 | 40px (service), 30px (member), 24px (step), all line-height ~1.05-1.15 |
-| Card question / summary | 22px serif, line-height 1.25-1.3 |
+| Card question / summary | 23px serif, line-height 1.25-1.3 |
 | `.lead` | 19px sans, `--ink-2`, max 56ch |
 | Body small | 16px (buttons), 15px (card text, nav), 14px (tags, tips) |
 | `.eyebrow` | mono 500 14px, `--terra-ink`, no uppercase, no tracking |
@@ -73,15 +74,14 @@ Section padding `clamp(64px, 10vw, 120px) 0`; container `.wrap` = `min(1200px, 1
 
 Source: `styles/landing.css`.
 
-| Value | Usage |
-| --- | --- |
-| 4px / 6px | Caption chip, `:focus-visible`, `.when` pill |
-| 8px | Tags, legend chips |
-| 10px | Buttons, pains chips, `.tag` |
-| 12px | Portraits, tooltips |
-| 16px | `.help` box |
-| 20px | Cards, figures, banners, icon tiles |
-| 50% / 999px | Round controls (`.theme-toggle`, `.spot button`, step pins, `.pa-tick`) |
+Radius carries meaning, so it is three tokens plus circles — never picked per box.
+
+| Token | Value | Usage |
+| --- | --- | --- |
+| `--r-surface` | 0 | Every surface: figures, cards, banners, portraits, `.help`, `.contact-card` |
+| `--r-control` | 3px | Buttons, inputs, `:focus-visible`, legal chip |
+| `--r-pill` | 999px | Tags, chips, progress rails |
+| 50% | circle | Icon-only controls (`.theme-toggle`, `.menu-toggle`, `.svc-arrow`, `summary .plus`, step pins) |
 
 ## Shadows
 
@@ -99,18 +99,18 @@ No glows. Motion: `--ease: cubic-bezier(.22,.8,.26,1)`; durations .15s-.2s for h
 Source: `styles/landing.css` unless noted.
 
 - Focus: `:focus-visible { outline: 3px solid var(--terra); outline-offset: 3px; border-radius: 6px }`.
-- `.btn`: inline-flex, gap 8px, padding 12px 24px, radius 10px, 600 16px, 1.5px border `--ink`; `:active` scale .98; `.arrow` moves 4px on hover.
+- `.btn`: inline-flex, gap 8px, padding 12px 24px, radius `--r-control`, 600 16px, 1.5px border `--ink`; `:active` scale .98; `.arrow` moves 4px on hover.
 - `.btn-primary`: fill `--ink`, text `--cream`; hover fill and border `--terra-ink`.
 - `.btn-ghost`: transparent, text `--ink`.
 - `.mini` (small button): min-height 44px, padding 8px 16px, 14px.
 - Round control: 44x44 target, circle, 1.5px border `--line`, hover border `--ink` (`.theme-toggle`).
-- Card (`.step .card`): `--surface`, 1px `--line`, radius 20px, hover border ink at 28%.
-- Figure (`.figure`): `--cream`, 1px `--line`, radius 20px, padding 24px, shadow above.
-- Tag (`.tags li`): 1px `--line`, `--cream`, radius 8px, 14px.
+- Card (`.step .card`): `--surface`, 1px `--line`, square, hover border ink at 28%.
+- Figure (`.figure`): `--cream`, 1px `--line`, square, padding 24px, shadow above.
+- Tag (`.tags li`): 1px `--line`, `--cream`, radius `--r-pill`, 14px.
 - Chip (`.pains-track li`): `--cream`, 1px `--line`, radius 10px, 15px 500; mobile row scrolls with `scroll-snap-type: x mandatory`.
 - Pill (`.when`): mono 500 13px, `--terra-ink` on `--terra-tint`, radius 6px.
-- Icon tile (`.step .ico`): 76px, radius 20px, `--terra-tint` / `--river-tint`, 1.6px round ink stroke icon.
+- Icon tile (`.step .ico`): 76px, square, `--terra-tint` / `--river-tint`, 1.6px round ink stroke icon.
 - Section head (`.sec-head`): 2 columns, eyebrow above h2, lead right; one column under 900px.
-- Dark band: `--petrol` with the petrol literals above; banner radius 20px.
+- Dark band: `--petrol` with the petrol literals above; square banner.
 - Isotype: `index.html` `<symbol id="isotipo">`, viewBox `0 -1 100 45`, brand 58x26.
 - Breakpoints in use: 900px (stack columns), 640px (single column, swipe rows), 560px, 400px.

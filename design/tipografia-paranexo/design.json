@@ -1,0 +1,27 @@
+{
+  "title": "Tipografía Paranexo",
+  "brief": "Tres direcciones tipográficas para paranexo.com, comparadas con el mismo contenido y layout: solo cambia la voz.",
+  "artboards": [
+    {
+      "file": "01-editorial-calida.html",
+      "title": "Editorial cálida",
+      "tradeoff": "Es la dirección que ya está en el sitio, afinada: la serif cálida de los títulos convive con una grotesca de verdad en el texto, sin grises apagados. Gana continuidad y calidez; no sorprende a nadie que ya vio el sitio.",
+      "width": 1440,
+      "height": 1300
+    },
+    {
+      "file": "02-grotesca-taller.html",
+      "title": "Grotesca de taller",
+      "tradeoff": "Una sola voz para todo: títulos y texto en la misma grotesca sueca, con cortes secos y un peso alto arriba. Gana cohesión y aire de estudio técnico; pierde la calidez de la serif y se parece más a otras casas de software.",
+      "width": 1440,
+      "height": 1300
+    },
+    {
+      "file": "03-revista-de-filo.html",
+      "title": "Revista de filo",
+      "tradeoff": "Serif de contraste alto y condensada arriba, grotesca de señalética abajo. Gana filo editorial y se ve más premium; Instrument Serif tiene un solo peso, así que la jerarquía depende de tamaño y medida, no del grosor.",
+      "width": 1440,
+      "height": 1300
+    }
+  ]
+}
