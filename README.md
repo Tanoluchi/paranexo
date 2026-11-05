@@ -18,15 +18,19 @@ Cada archivo de `src/pages/` arranca con un bloque `<!-- page {...} -->` que fij
 
 ## Publicación
 
-GitHub Pages publica solo el sitio, no el repositorio: `.github/workflows/pages.yml` corre los tests y, si pasan, arma `_site/` con `node scripts/build-site.mjs` y lo publica. Quedan afuera `design/`, `odd/`, los tests, los scripts, las fuentes de `src/` (solo se publican los módulos del navegador) y los archivos internos.
+El sitio vive en **paranexo.com**, servido por Cloudflare Pages, y tiene un espejo en GitHub Pages. Un solo workflow, `.github/workflows/pages.yml`, corre los tests y, si pasan, arma `_site/` con `node scripts/build-site.mjs` y sube ese mismo artefacto a los dos lados: nunca se construye dos veces.
+
+Quedan afuera `design/`, `odd/`, `docs/`, los tests, los scripts, las fuentes de `src/` (solo se publican los módulos del navegador) y los archivos internos.
 
 - Se ejecuta en cada push a `master` o a mano desde la pestaña Actions.
-- Configuración necesaria una sola vez: Settings → Pages → Build and deployment → Source: **GitHub Actions**.
+- Cloudflare Pages usa el proyecto `paranexo` (Direct Upload); necesita los secrets `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID`. Sin token, el paso se saltea y el deploy de GitHub Pages sigue publicando.
+- Configuración necesaria una sola vez en GitHub: Settings → Pages → Build and deployment → Source: **GitHub Actions**.
 - Para ver lo que se publicaría: `node scripts/build-site.mjs` y servir `_site/` (`python3 -m http.server 8000 -d _site`). El script se niega a escribir en el repositorio o en una carpeta que lo contenga, porque borra la carpeta de salida antes de copiar.
+- DNS, certificados, dominio propio y rollback: `docs/dominio-paranexo.md`.
 
 ## Antes de publicarla
 
-El sitio se publica en GitHub Pages: https://tanoluchi.github.io/paranexo/ (lo usan `canonical`, `og:url` y `sitemap.xml`).
+Los `canonical`, `og:url` y `sitemap.xml` usan `https://paranexo.com/` (`SITE` en `scripts/build-pages.mjs`). El espejo de GitHub Pages queda en `tanoluchi.github.io/paranexo/` y redirige al dominio porque el artefacto declara el `CNAME`.
 
 Los enlaces «Hablemos» llevan a `contacto/`, un formulario de tres pasos; `hablemos.html` quedó como redirección para los enlaces ya compartidos. Los destinos de contacto están en `src/contact-message.mjs`:
 
