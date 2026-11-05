@@ -32,15 +32,15 @@ test('landing exposes the canvas page-one structure', () => {
 });
 
 test('every contact call to action opens a separate, honest three-step form', () => {
-  assert.doesNotMatch(html, /04-hablemos\.html|hola@paranexo\.com|Nombre Apellido|href="#hablemos"/);
+  assert.doesNotMatch(html, /04-hablemos\.html|Nombre Apellido|href="#hablemos"/);
   assert.ok((html.match(/href="\.\/contacto\/"/g) || []).length >= 5);
   const form = readFileSync(new URL('../contacto/index.html', import.meta.url), 'utf8');
   for (const name of ['name', 'business', 'channel', 'contact', 'topic', 'problem']) {
     assert.match(form, new RegExp(`name="${name}"`));
   }
-  // real destination (the team's confirmed address), no invented address and no response-time promise
-  assert.match(form, /holaparanexo@gmail\.com/);
-  assert.doesNotMatch(form, /hola@paranexo\.com|menos de 24 h|tu consulta le llega/);
+  // the public address is the domain one; the mailbox behind it stays private, and no response-time promise
+  assert.match(form, /hola@paranexo\.com/);
+  assert.doesNotMatch(form, /@gmail\.com|menos de 24 h|tu consulta le llega/);
 });
 
 const css = (path) => readFileSync(new URL(`../styles/${path}`, import.meta.url), 'utf8');

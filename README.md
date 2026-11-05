@@ -33,7 +33,7 @@ Los `canonical`, `og:url` y `sitemap.xml` usan `https://paranexo.com/` (`SITE` e
 
 Los enlaces «Hablemos» llevan a `contacto/`, un formulario de tres pasos; `hablemos.html` quedó como redirección para los enlaces ya compartidos. Los destinos de contacto están en `src/contact-message.mjs`:
 
-- `email`: holaparanexo@gmail.com.
+- `email`: hola@paranexo.com.
 - `whatsapp`: **número de ejemplo** (+54 9 379 000-0000). Cambialo antes de publicar, en ese archivo y en `src/pages/contacto.html`; las páginas lo toman de ahí al correr `node scripts/build-pages.mjs`.
 - `endpoint`: URL del backend propio. Vacío, el último paso abre el correo del visitante con la consulta armada. Con una URL, el formulario hace `POST` en JSON con `name`, `business`, `channel`, `contact`, `topics`, `problem` y `website`; el backend debe descartar los envíos con `website` completo (es una trampa para bots) y permitir el origen `https://tanoluchi.github.io` (CORS).
 
