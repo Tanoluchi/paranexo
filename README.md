@@ -26,7 +26,8 @@ Quedan afuera `design/`, `odd/`, `docs/`, los tests, los scripts, las fuentes de
 - Cloudflare Pages usa el proyecto `paranexo` (Direct Upload); necesita los secrets `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID`. Sin token, el paso se saltea y el deploy de GitHub Pages sigue publicando.
 - Configuración necesaria una sola vez en GitHub: Settings → Pages → Build and deployment → Source: **GitHub Actions**.
 - Para ver lo que se publicaría: `node scripts/build-site.mjs` y servir `_site/` (`python3 -m http.server 8000 -d _site`). El script se niega a escribir en el repositorio o en una carpeta que lo contenga, porque borra la carpeta de salida antes de copiar.
-- DNS, certificados, dominio propio y rollback: `docs/dominio-paranexo.md`.
+
+El DNS, los certificados, la regla de `www` y el rollback están documentados fuera del repo, en `~/Documents/paranexo-dominio.md` (referencia) y `~/Documents/paranexo-deploy-paso-a-paso.md` (bitácora con los comandos).
 
 ## Antes de publicarla
 
