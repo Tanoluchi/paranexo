@@ -269,7 +269,8 @@
   }
   .paused .water i, .paused .petal { animation-play-state: paused; }
   /* the info block starts inside the faded lower part of the illustration, so the whole footer reads in one view */
-  .foot-body { position: relative; margin-top: clamp(-96px, -7vw, -56px); padding-top: 0; }
+  /* the info starts below the picture, on solid cream: the fade already ends in --cream, so the text never sits on the image */
+  .foot-body { position: relative; padding-top: clamp(20px, 2.4vw, 32px); }
   .foot-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)); gap: 28px clamp(24px, 4vw, 56px); align-items: start; }
   .foot-brand .brand-logo { width: 208px; height: auto; }
   .foot-brand .brand-logo.logo-light { display: block; }
@@ -349,7 +350,6 @@
     .hero { padding-bottom: calc(22vw + 40px); } /* room for the whole bridge under the copy */
     .js .hero-scene { -webkit-mask-image: linear-gradient(to bottom, #000 94%, transparent); mask-image: linear-gradient(to bottom, #000 94%, transparent); }
     .foot-art { height: clamp(170px, 46vw, 230px); }
-    .foot-body { margin-top: -40px; }
     .foot-art > img { object-position: 42% 66%; }
     .foot-grid { grid-template-columns: 1fr 1fr; gap: 22px 20px; }
     .foot-brand { grid-column: 1 / -1; }
