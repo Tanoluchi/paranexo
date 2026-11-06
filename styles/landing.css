@@ -278,20 +278,57 @@
   .cta-panel .blobs i:nth-child(2) { right: -8%; top: 10%; width: 44%; }
   .cta-panel .blobs i:nth-child(3) { left: 36%; bottom: -60%; width: 40%; }
 
-  /* Footer */
-  .footer { position: relative; background: var(--petrol); color: var(--on-petrol-2); }
-  /* Crop the empty sky and the table legs: the sky matches --petrol, so the cut is seamless */
-  .footer img { display: block; width: 100%; height: auto; aspect-ratio: 1944 / 380; object-fit: cover; object-position: 50% 85%; }
-  .footer-content { padding-top: 48px; }
-  .footer-grid { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 40px; }
-  .footer h4 { font: 500 14px var(--mono); color: var(--terra-on-petrol); margin: 0 0 12px; }
-  .footer ul { list-style: none; padding: 0; margin: -10px 0 0; display: grid; gap: 0; font-size: 15px; }
-  .footer ul a { display: inline-block; padding-block: 10px; text-decoration: none; color: var(--on-petrol-2); }
-  .footer ul a:hover { color: var(--on-petrol); text-decoration: underline; }
-  .footer .tag { color: var(--on-petrol-3); max-width: 34ch; margin: 12px 0 0; font-size: 15px; }
-  .legal { position: absolute; left: 0; right: 0; bottom: 16px; }
-  .legal .wrap { display: flex; justify-content: space-between; font: 500 12px var(--mono); color: var(--on-petrol-2); }
-  .legal span { background: rgba(30,42,47,.82); padding: 4px 8px; border-radius: var(--r-control); }
+  /* Footer: the Paseo del Paraná at dusk, with the water moving and lapacho petals falling */
+  .footer { position: relative; background: var(--cream); color: var(--ink); }
+  .foot-art { position: relative; overflow: hidden; height: clamp(210px, 27vw, 370px); background: var(--paper); }
+  .foot-art > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 74%; }
+  /* the illustration fades into the page colour instead of ending on a cut */
+  .foot-art::after { content: ""; position: absolute; inset: auto 0 0; height: 74%; background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--cream) 62%, transparent) 42%, var(--cream) 74%); pointer-events: none; }
+  /* Water: repeating ripple lines drifting over the river only (right of the railing), softened and masked at both ends */
+  .water { position: absolute; left: 44%; right: 0; top: 66%; bottom: 0; overflow: hidden; pointer-events: none; mix-blend-mode: soft-light; opacity: .9; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 34%, #000 78%, transparent), linear-gradient(to right, transparent, #000 18%); mask-image: linear-gradient(to bottom, transparent, #000 34%, #000 78%, transparent), linear-gradient(to right, transparent, #000 18%); -webkit-mask-composite: source-in; mask-composite: intersect; }
+  .water i { position: absolute; inset: -9px 0; background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, .9) 0 1.5px, transparent 1.5px 9px); animation: ripple 6s linear infinite; }
+  .water i:nth-child(2) { inset: -14px 0; background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, .6) 0 1px, transparent 1px 14px); animation: ripple-b 10s linear infinite; opacity: .75; }
+  @keyframes ripple { from { transform: translateY(0); } to { transform: translateY(9px); } }
+  @keyframes ripple-b { from { transform: translateY(0); } to { transform: translateY(-14px); } }
+  /* Lapacho petals: a few, falling from the tree on the left with a slow sway */
+  .petals { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  .petal { position: absolute; top: -8%; left: var(--x); width: var(--s); height: calc(var(--s) * .72); border-radius: 62% 38% 55% 45% / 60% 55% 45% 40%; background: linear-gradient(140deg, #FBC0CF, #EE7FA2); animation: petal-fall var(--dur) linear var(--delay) infinite; will-change: transform; }
+  @keyframes petal-fall {
+    0%   { top: -8%; transform: translateX(0) rotate(0deg); opacity: 0; }
+    8%   { opacity: .95; }
+    45%  { transform: translateX(var(--sway)) rotate(200deg); }
+    80%  { transform: translateX(calc(var(--sway) * -.55)) rotate(390deg); opacity: .95; }
+    100% { top: 104%; transform: translateX(calc(var(--sway) * -.3)) rotate(460deg); opacity: 0; }
+  }
+  .paused .water i, .paused .petal { animation-play-state: paused; }
+  /* the info block starts inside the faded lower part of the illustration, so the whole footer reads in one view */
+  .foot-body { position: relative; margin-top: clamp(-96px, -7vw, -56px); padding-top: 0; }
+  .foot-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)); gap: 28px clamp(24px, 4vw, 56px); align-items: start; }
+  .foot-brand .brand-logo { width: 208px; height: auto; }
+  .foot-brand .brand-logo.logo-light { display: block; }
+  :root[data-theme="dark"] .foot-art::after { height: 30%; }
+  :root[data-theme="dark"] .foot-art > img { filter: brightness(.92); }
+  .footer .foot-brand .tag { margin: 14px 0 0; color: var(--ink-2); font-size: 15px; line-height: 1.5; max-width: 34ch; }
+  .foot-contact { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .footer .foot-mail { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 5px 16px 5px 5px; border-radius: var(--r-pill); border: 1px solid var(--line); background: var(--surface); color: var(--ink); text-decoration: none; font-weight: 600; font-size: 15px; transition: border-color .2s var(--ease), color .2s var(--ease); }
+  .footer .foot-mail:hover { border-color: var(--terra-ink); color: var(--terra-ink); }
+  .footer .foot-mail .ic { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--terra-tint); color: var(--terra-ink); }
+  .footer .foot-mail svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .footer .socials { display: flex; gap: 8px; list-style: none; margin: 0; padding: 0; }
+  /* social tiles match the mail pill height (44px) so the contact row shares one edge; padding stays 0 (no inherited link padding) */
+  .footer .social { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border-radius: 11px; transition: translate .2s var(--ease), filter .2s var(--ease); }
+  .footer .social img { display: block; width: 44px; height: 44px; aspect-ratio: 1; border-radius: 11px; box-shadow: 0 1px 2px rgb(32 33 31 / .12), 0 4px 10px -4px rgb(32 33 31 / .25); }
+  :root[data-theme="dark"] .footer .social img { box-shadow: 0 0 0 1px rgb(250 244 232 / .24), 0 4px 10px -4px rgb(0 0 0 / .5); }
+  .footer .social:hover { translate: 0 -2px; }
+  .footer .social:hover img { box-shadow: 0 2px 4px rgb(32 33 31 / .14), 0 8px 16px -6px rgb(32 33 31 / .3); }
+  .footer .foot-links h4 { font: 500 13px/1.3 var(--mono); color: var(--terra-ink); margin: 0 0 10px; }
+  .footer .foot-links ul { list-style: none; margin: 0; padding: 0; font-size: 15px; }
+  .footer .foot-links a { display: inline-block; padding-block: 7px; color: var(--ink-2); text-decoration: none; transition: color .2s var(--ease); }
+  .footer .foot-links a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .footer .foot-links a[aria-current="page"] { color: var(--ink); font-weight: 600; }
+  .foot-legal { display: flex; justify-content: space-between; gap: 10px 24px; flex-wrap: wrap; margin-top: clamp(20px, 2.6vw, 32px); padding: 14px 0 22px; border-top: 1px solid var(--line); font: 500 12px/1.5 var(--mono); color: var(--ink-2); }
+  .footer .foot-legal a { color: var(--ink-2); }
+  .footer .foot-legal a:hover { color: var(--ink); }
 
   /* Reveal */
   @media (prefers-reduced-motion: no-preference) {

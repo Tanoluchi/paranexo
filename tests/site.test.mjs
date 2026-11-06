@@ -8,10 +8,10 @@ test('landing keeps every major editorial section and real local artwork', () =>
   for (const id of ['contenido', 'top', 'problemas', 'servicios', 'preguntas', 'hablemos']) {
     assert.match(html, new RegExp(`id="${id}"`));
   }
-  assert.match(html, /assets\/footer-taller\.jpg/);
+  assert.match(html, /assets\/footer-paseo-parana\.jpg/);
   // the hero bridge is drawn as dots from the original illustration
   assert.match(readFileSync(new URL('../src/hero-dots.mjs', import.meta.url), 'utf8'), /assets\/hero-puente-v2\.jpg/);
-  for (const image of ['hero-puente-v2.jpg', 'footer-taller.jpg']) assert.ok(existsSync(new URL(`../assets/${image}`, import.meta.url)));
+  for (const image of ['hero-puente-v2.jpg', 'footer-paseo-parana.jpg']) assert.ok(existsSync(new URL(`../assets/${image}`, import.meta.url)));
   assert.match(html, /Conectamos tus ideas con soluciones reales/);
   assert.match(html, /<script type="module" src="\.\/src\/landing\.mjs"><\/script>/);
 });
@@ -261,4 +261,39 @@ test('the brand kit, its palette and the glass material are shared by every page
   assert.match(glass, /\.glass \{[^}]*backdrop-filter/);
   assert.match(glass, /@keyframes ooze/);
   assert.match(glass, /\.frost::before/);
+});
+
+test('the footer is the Paseo del Paraná band with the kit brand, mail pill, socials, columns and legal row', () => {
+  const footer = html.match(/<footer class="footer">[\s\S]*?<\/footer>/)?.[0] ?? '';
+  assert.match(footer, /assets\/footer-paseo-parana\.jpg/);
+  assert.match(footer, /alt="[^"]*Paseo del Paraná[^"]*"/);
+  assert.match(footer, /class="water" aria-hidden="true"/);
+  assert.match(footer, /class="petals" aria-hidden="true"/);
+  assert.match(footer, /assets\/brand\/logo-horizontal-color\.svg/);
+  assert.match(footer, /assets\/brand\/logo-horizontal-color-dark\.svg/);
+  assert.match(footer, /class="foot-mail" href="mailto:hola@paranexo\.com"/);
+  assert.match(footer, /href="#i-mail"/);
+  const socials = footer.match(/<ul class="socials"[\s\S]*?<\/ul>/)?.[0] ?? '';
+  assert.match(socials, /aria-label="Paranexo en Instagram"[\s\S]*assets\/social\/instagram\.png/);
+  assert.match(socials, /aria-label="Paranexo en X"[\s\S]*assets\/social\/x\.svg/);
+  assert.match(footer, /href="#" data-todo="instagram-url"/);
+  // the mail pill and the social tiles share one height, and no inherited link padding moves the icons
+  for (const rule of css('landing.css').match(/\{[^{}]*\}/g)) {
+    if (/\.footer \.social \{/.test(rule)) assert.match(rule, /padding: 0/);
+  }
+  assert.match(css('landing.css'), /\.footer \.social img \{[^}]*width: 44px; height: 44px/);
+  assert.match(footer, /href="\.\/servicios\/software-a-medida\/"/);
+  assert.match(footer, /href="\.\/privacidad\.html"/);
+  assert.match(footer, /27\.47°S 58\.83°W/);
+  assert.match(footer, /Hecho en el NEA, Argentina/);
+  assert.doesNotMatch(html, /id="isotipo"|<svg class="iso"/);
+});
+
+test('footer motion rests off screen and is static under reduced motion', () => {
+  const js = readFileSync(new URL('../src/footer.mjs', import.meta.url), 'utf8');
+  assert.match(js, /prefers-reduced-motion: reduce/);
+  assert.match(js, /IntersectionObserver/);
+  assert.match(js, /classList\.toggle\('paused'/);
+  const page = readFileSync(new URL('../src/page.mjs', import.meta.url), 'utf8');
+  assert.match(page, /initFooter\(\)/);
 });

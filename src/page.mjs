@@ -1,7 +1,8 @@
-// Shared by every page: nav border on scroll, reveal on scroll and, when the page shows one, its figure demo.
+// Shared by every page: nav border on scroll, reveal on scroll, footer petals and, when the page shows one, its figure demo.
 import { initSoftware } from './figures/software.mjs';
 import { initAuto } from './figures/auto.mjs';
 import { initAi } from './figures/ai.mjs';
+import { initFooter } from './footer.mjs';
 
 const FIGURES = { software: initSoftware, auto: initAuto, ai: initAi };
 
@@ -33,6 +34,12 @@ export function initPage() {
   });
 
   FIGURES[document.querySelector('[data-figure]')?.dataset.figure]?.();
+
+  // liquid fields rest while off screen
+  const live = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('paused', !e.isIntersecting)), { rootMargin: '120px' });
+  document.querySelectorAll('.blobs').forEach(b => live.observe(b.parentElement));
+
+  initFooter();
 }
 
 // Every page loads this module; the home then adds its hero and the three demos on top.
