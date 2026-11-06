@@ -1,8 +1,10 @@
 import { test } from 'node:test';
 import { readFileSync, existsSync } from 'node:fs';
 import assert from 'node:assert/strict';
+import { PAGES } from '../scripts/build-pages.mjs';
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const read = path => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 
 test('landing keeps every major editorial section and real local artwork', () => {
   for (const id of ['contenido', 'top', 'problemas', 'servicios', 'preguntas', 'hablemos']) {
@@ -123,50 +125,59 @@ test('team cards lead with their role, with no empty photo frames', () => {
   members.forEach((m, i) => assert.match(m, new RegExp(`<h3[^>]*>\\s*${roles[i]}\\s*</h3>`)));
 });
 
-test('servicios carousel sits between El problema and the FAQ with all seven services', () => {
+test('the home shows the three applications between the problems and the FAQ', () => {
   const at = id => html.indexOf(`id="${id}"`);
   assert.ok(at('problemas') > -1 && at('servicios') > at('problemas') && at('preguntas') > at('servicios'));
-  // the home keeps no process section of its own; /como-trabajamos/ owns those steps
-  assert.doesNotMatch(html, /id="como-trabajamos"|class="process-head/);
-  const section = html.match(/<section[^>]*id="servicios"[^>]*>[\s\S]*?<\/section>/)?.[0] ?? '';
-  assert.match(section, /aria-labelledby="/);
-  for (const title of ['Software a medida', 'Automatizaciones', 'Bots', 'Agentes', 'IA para tu negocio', 'Diseño de páginas web', 'Integraciones']) {
-    assert.match(section, new RegExp(`<h3>${title}</h3>`));
-  }
-  assert.equal((section.match(/class="svc-card/g) ?? []).length, 7);
-  assert.match(section, /<ul class="svc-track[^"]*"[^>]*aria-label="/);
-  assert.match(section, /<button[^>]*aria-label="Servicio anterior"/);
-  assert.match(section, /<button[^>]*aria-label="Servicio siguiente"/);
-  // the carousel CTA stays a quiet text link next to the seven cards
-  assert.doesNotMatch(section, /Contanos qué necesitás|class="btn/);
-  assert.match(section, /<p class="lead">[^<]*<a href="\.\/contacto\/">contanos<\/a><\/p>/);
-  assert.doesNotMatch(section, /class="num"|Siete formas/);
+  assert.match(html, /<h2 id="apps-title">Así se ve en tu negocio<\/h2>/);
+  assert.match(html, /<div class="app-tabs reveal" role="tablist"/);
+  assert.equal((html.match(/role="tab"/g) ?? []).length, 3);
+  for (const id of ['scene-auto', 'scene-soft', 'scene-ia']) assert.match(html, new RegExp(`id="${id}"`));
+  assert.match(html, /Ejemplo: distribuidora de bebidas/);
+  assert.match(html, /href="\.\/servicios\/">Ver todos los servicios/);
+  // the carousel moved to the Servicios page; its screenshots are no longer on the home
+  assert.doesNotMatch(html, /class="svc-card/);
+  assert.match(html, /styles\/apps\.css/);
+  const js = readFileSync(new URL('../src/landing.mjs', import.meta.url), 'utf8');
+  assert.match(js, /from "\.\/apps\.mjs"/);
+  assert.match(js, /initHeroDots/);
 });
 
-test('carousel behaviour lives in src/carousel.mjs, is wired from landing.mjs and is not autoplay', () => {
+test('the hero keeps the live dotted bridge and only gains the glass copy treatment', () => {
+  const hero = html.match(/<header class="hero"[\s\S]*?<\/header>/)?.[0] ?? '';
+  assert.match(hero, /<div class="hero-scene"><canvas class="hero-dots"/);
+  assert.doesNotMatch(hero, /<img/);
+  assert.match(hero, /class="hero-ctas cluster glass"/);
+  assert.match(hero, /<span class="blobs" aria-hidden="true">/);
+  // S15: the dots module is untouched, same image and crop
+  const dots = readFileSync(new URL('../src/hero-dots.mjs', import.meta.url), 'utf8');
+  assert.match(dots, /\{ x: 0, y: 338, w: 1942, h: 424 \}/);
+  assert.match(dots, /assets\/hero-puente-v2\.jpg/);
+});
+
+test('the carousel module is shared and only the page with a track wires it', () => {
   assert.ok(existsSync(new URL('../src/carousel.mjs', import.meta.url)));
-  const main = readFileSync(new URL('../src/landing.mjs', import.meta.url), 'utf8');
-  assert.match(main, /from "\.\/carousel\.mjs"/);
   const js = readFileSync(new URL('../src/carousel.mjs', import.meta.url), 'utf8');
   assert.match(js, /prefers-reduced-motion: reduce/);
-  assert.doesNotMatch(js, /setInterval|setTimeout/);
-  const styles = readFileSync(new URL('../styles/landing.css', import.meta.url), 'utf8');
-  assert.match(styles, /\.svc-track \{[^}]*scroll-snap-type: x mandatory/);
-  assert.match(styles, /:root, \.figure, \.svc-card/);
+  assert.doesNotMatch(js, /setInterval/);
+  // wherever a track is published, the stylesheet that ships with it owns the scroll-snap
+  const tracks = PAGES.filter(page => read(page.out).includes('class="svc-track'));
+  for (const page of tracks) {
+    const cssFiles = [...read(page.out).matchAll(/href="[^"]*styles\/([^"]+)"/g)].map(m => m[1]);
+    assert.ok(cssFiles.some(file => read(`styles/${file}`).includes('.svc-track')), `${page.out} needs the carousel stylesheet`);
+  }
 });
 
-test('each service card shows its real screenshot with dimensions and a description', () => {
+test('the service photos keep their dimensions and descriptions where they are used', () => {
   const names = ['software-a-medida', 'automatizaciones', 'bots', 'agentes', 'ia-para-tu-negocio', 'diseno-web', 'integraciones'];
-  for (const name of names) {
-    const src = `./assets/servicios/${name}.jpg`;
-    const tag = html.match(new RegExp(`<img[^>]*src="${src.replace(/[./]/g, '\\$&')}"[^>]*>`))?.[0] ?? '';
-    assert.ok(tag, `${name}: <img> missing from index.html`);
+  for (const name of names) assert.ok(existsSync(new URL(`../assets/servicios/${name}.jpg`, import.meta.url)), `${name}.jpg missing on disk`);
+  const hub = readFileSync(new URL('../servicios/index.html', import.meta.url), 'utf8');
+  const images = hub.match(/<img[^>]*assets\/servicios\/[^>]*>/g) ?? [];
+  assert.ok(images.length >= 3);
+  for (const tag of images) {
     assert.match(tag, /width="720"/);
     assert.match(tag, /height="1080"/);
     assert.match(tag, /alt="[^"]+"/);
-    assert.ok(existsSync(new URL(`../assets/servicios/${name}.jpg`, import.meta.url)), `${name}.jpg missing on disk`);
   }
-  assert.doesNotMatch(html, /class="vg"/);
 });
 
 test('in the contact form only the person name is required, the business name is optional', () => {

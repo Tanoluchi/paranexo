@@ -135,8 +135,4 @@ test('the home keeps one diagnosis and no stale form copy', () => {
   const ctas = main.match(/class="btn btn-primary"[^>]*>([^<]+)/g) ?? [];
   assert.ok(ctas.length >= 2);
   for (const cta of ctas) assert.match(cta, />Hablemos de tu proyecto/);
-  // every carousel card leads somewhere
-  const cards = home.match(/<li class="svc-card">[\s\S]*?<\/li>/g) ?? [];
-  assert.equal(cards.length, 7);
-  for (const card of cards) assert.match(card, /<a class="link" href="(?:\.\/servicios\/|\.\/contacto\/)/);
 });

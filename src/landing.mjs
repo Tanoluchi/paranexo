@@ -1,5 +1,5 @@
 import { initHeroDots } from "./hero-dots.mjs";
-import { initCarousel } from "./carousel.mjs";
+import { initApps } from "./apps.mjs";
 import "./page.mjs";
 (() => {
   // Hero word reveal
@@ -19,7 +19,7 @@ import "./page.mjs";
   };
   walk(h1);
 
-  // the home is the only page that shows all three demos
+  // the dotted bridge sits behind the copy; the applications section follows the problems
   initHeroDots();
-  initCarousel();
+  initApps();
 })();

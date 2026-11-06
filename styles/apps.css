@@ -1,0 +1,88 @@
+  /* Home: the glass copy treatment over the live dotted bridge, and the applications section. */
+  .hero > .blobs { z-index: 0; --blob-op: .34; --b1: var(--terra-tint); --b2: var(--terra-soft); --b3: var(--paper); -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 66%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 66%, transparent); }
+  .hero > .blobs i:nth-child(1) { left: -18%; top: -30%; width: 44%; }
+  .hero > .blobs i:nth-child(2) { right: -16%; top: 18%; width: 40%; }
+  .hero > .blobs i:nth-child(3) { left: 38%; bottom: -30%; width: 34%; }
+  :root[data-theme="dark"] .hero > .blobs { --blob-op: .16; }
+
+  .apps { position: relative; padding-top: 0; }
+  .apps .more { margin: 14px 0 0; }
+  .apps .more .link { font-weight: 600; }
+  .app-tabs { display: flex; gap: 12px; margin-bottom: 20px; }
+  .liquid-tile { appearance: none; flex: 1 1 0; min-width: 0; height: 132px; padding: 20px 22px; display: flex; align-items: flex-end; gap: 14px; text-align: left; font: inherit; color: var(--ink); border: 0; cursor: pointer; border-radius: var(--r-glass); --frost: 72%; transition: flex-grow .8s var(--spring), border-radius .8s var(--ease), transform .2s var(--ease); }
+  .liquid-tile[aria-selected="true"] { flex-grow: 2.3; border-radius: 30px 18px 30px 18px; --frost: 52%; }
+  .liquid-tile:hover { transform: translateY(-2px); }
+  .liquid-tile:nth-child(1) { --b1: var(--terra); --b2: var(--terra-tint); --b3: var(--petrol); }
+  .liquid-tile:nth-child(2) { --b1: var(--terra-soft); --b2: var(--petrol); --b3: var(--terra); }
+  .liquid-tile:nth-child(3) { --b1: var(--petrol); --b2: var(--terra); --b3: var(--terra-tint); }
+  .liquid-tile .dotspin { position: absolute; top: 18px; right: 18px; color: var(--ink); animation-play-state: paused; }
+  .liquid-tile[aria-selected="true"].running .dotspin { animation-play-state: running; }
+  .lt-txt { display: grid; gap: 4px; min-width: 0; }
+  .lt-txt b { font: 400 27px/1.05 var(--serif); }
+  .lt-txt small { font: 400 15px/1.35 var(--sans); color: var(--ink-2); max-height: 0; opacity: 0; overflow: hidden; transition: max-height .6s var(--ease), opacity .4s var(--ease); }
+  .liquid-tile[aria-selected="true"] .lt-txt small { max-height: 3em; opacity: 1; }
+  .liquid-tile:not([aria-selected="true"]) .lt-txt small { color: var(--ink); }
+
+  /* the stage keeps the light palette in dark mode, like the other illustrations */
+  .app-stage { padding: clamp(20px, 3.4vw, 44px); border-radius: calc(var(--r-glass) + 8px); color: var(--ink); background: var(--paper); --b1: var(--terra-tint); --b2: var(--terra); --b3: var(--petrol); --blob-op: .6; box-shadow: 0 40px 70px -50px rgba(32, 33, 31, .45); }
+  .app-stage .blobs i:nth-child(1) { left: -8%; top: -40%; width: 52%; }
+  .app-stage .blobs i:nth-child(2) { right: -10%; top: 20%; width: 44%; }
+  .app-stage .blobs i:nth-child(3) { left: 30%; bottom: -60%; width: 42%; }
+  .stage-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; min-height: 44px; }
+  .stage-cap { font: 500 13px/1.3 var(--mono); color: var(--ink-2); }
+  .replay { gap: 8px; white-space: nowrap; flex: none; --frost: 70%; background: var(--glass-tint-strong); border-color: var(--glass-rim); border-radius: var(--r-control); }
+  .replay svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .replay:disabled { opacity: .45; cursor: default; }
+  .app-stage section { padding: 0; }
+  .scenes { display: block; }
+  .scene { display: none; min-width: 0; }
+  .scene.on { display: block; animation: scene-in .5s var(--ease) both; }
+  @keyframes scene-in { from { opacity: 0; filter: blur(6px); transform: translateY(10px); } }
+  /* the agents scene grows while it runs: reserve its peak so the page below never jumps */
+  #scene-auto { min-height: 410px; }
+  .auto-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .auto-grid .col-r { order: 2; display: grid; }
+  .auto-grid .col-r > * { grid-area: 1 / 1; align-self: start; }
+  .ia-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .ia-grid .result { grid-template-rows: 0fr; }
+
+  @media (max-width: 1100px) {
+    .lt-txt b { font-size: 24px; }
+  }
+  @media (max-width: 900px) {
+    .auto-grid, .ia-grid { grid-template-columns: minmax(0, 1fr); }
+    #scene-auto { min-height: 790px; }
+    .auto-grid .col-r { order: 0; }
+    .liquid-tile { height: 120px; padding: 16px 18px; }
+  }
+  @media (max-width: 760px) {
+    .mock { grid-template-columns: 1fr; }
+    .mock-side { border-right: 0; border-bottom: 1px solid var(--glass-rim); padding: 10px; }
+    .mock-brand { display: none; }
+    .mock-nav { grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; scrollbar-width: none; }
+    .mock-nav li { padding: 8px 12px; }
+  }
+  @media (max-width: 640px) {
+    .app-tabs { flex-direction: column; gap: 10px; }
+    .liquid-tile { flex: none; height: 76px; align-items: center; transition: height .7s var(--spring), border-radius .7s var(--ease), transform .2s var(--ease); }
+    .liquid-tile[aria-selected="true"] { height: 124px; align-items: flex-end; }
+    .liquid-tile .dotspin { top: 50%; margin-top: -9px; }
+    .liquid-tile[aria-selected="true"] .dotspin { top: 18px; margin-top: 0; }
+    .lt-txt b { font-size: 25px; }
+    .app-stage { padding: 14px; border-radius: var(--r-glass); }
+    #scene-auto { min-height: 900px; }
+    .stage-cap { font-size: 12px; }
+    .replay { padding-inline: 12px; }
+    .task .row { grid-template-columns: auto 1fr auto; gap: 10px; padding: 12px 8px; position: relative; }
+    .task .meta .flag { display: none; }
+    .task .agent { position: absolute; right: 12px; bottom: 12px; width: 22px; height: 22px; }
+    .t { font-size: 16px; }
+    .kpis { gap: 8px; }
+    .kpi { padding: 12px; }
+    .kpi b { font-size: 36px; }
+    .mock-main { padding: 16px; }
+    .trow .r { grid-template-columns: 1.4fr .8fr 1fr; padding: 10px 12px; font-size: 14px; gap: 8px; }
+    .toast { right: 12px; left: 12px; bottom: 12px; max-width: none; }
+    .res-t > span { padding: 9px 10px; font-size: 14.5px; }
+    .file { flex-wrap: wrap; }
+  }
