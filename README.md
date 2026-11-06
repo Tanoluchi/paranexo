@@ -12,7 +12,9 @@ Abrí [http://localhost:8000](http://localhost:8000). No necesita instalar depen
 
 Todas las páginas comparten `styles/landing.css`: tokens, botones, nav y footer. El modo oscuro se activa con el botón del nav y la elección se guarda en el navegador; por defecto se ve en modo claro. Las ilustraciones conservan su paleta clara. Las reglas de UI están en `AGENTS.md`.
 
-Las páginas se generan desde `src/pages/`, con el encabezado, el nav, el isotipo y el footer en `src/partials/` y las tres ilustraciones en `src/figures/`. `node scripts/build-pages.mjs` escribe `index.html`, `contacto/index.html`, `privacidad.html` y `sitemap.xml`: editá las fuentes y regenerá; el sitio publicado solo necesita los archivos estáticos, no el directorio `design/`.
+La identidad sale del kit **Puente Cauce** (logo, favicon y paleta) en `assets/brand/`. La home muestra los ejemplos animados de las aplicaciones (`src/apps.mjs`); la página de servicios lleva el carrusel con un ejemplo animado por servicio y el detalle de cada uno (`src/servicios.mjs`, `styles/servicios.css`). Los íconos de Instagram y X del footer todavía apuntan a `#` (`data-todo`): reemplazalos por las URLs de los perfiles.
+
+Las páginas se generan desde `src/pages/`, con el encabezado, el nav, los íconos compartidos (`isotipo.html`) y el footer en `src/partials/` y las tres ilustraciones en `src/figures/`. `node scripts/build-pages.mjs` escribe `index.html`, `contacto/index.html`, `privacidad.html` y `sitemap.xml`: editá las fuentes y regenerá; el sitio publicado solo necesita los archivos estáticos, no el directorio `design/`.
 
 Cada archivo de `src/pages/` arranca con un bloque `<!-- page {...} -->` que fija su título, su descripción, su carpeta de salida y, si hace falta, sus estilos y módulos. El armador resuelve las rutas relativas según la profundidad de la página, así que una página nueva en una subcarpeta no necesita `../` a mano.
 
