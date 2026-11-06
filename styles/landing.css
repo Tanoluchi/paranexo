@@ -1,30 +1,46 @@
-  /* Instrument Serif: high-contrast condensed display serif, single weight; hierarchy comes from size and measure, never weight */
+  /* Locally hosted variable Google Fonts; licenses are in assets/fonts/OFL-*.txt. */
   @font-face {
-    font-family: "Instrument Serif";
+    font-family: "Bricolage Grotesque";
     font-style: normal;
-    font-weight: 400;
+    font-weight: 200 800;
     font-display: swap;
-    src: url("../assets/fonts/instrument-serif.woff2") format("woff2");
+    src: url("../assets/fonts/bricolage-grotesque-latin.woff2") format("woff2");
   }
-  /* Archivo: grotesque with signage bones, so running text has a voice instead of the system default; see assets/fonts/OFL-archivo.txt */
   @font-face {
-    font-family: "Archivo";
+    font-family: "Bricolage Grotesque";
     font-style: normal;
-    font-weight: 100 900;
+    font-weight: 200 800;
     font-display: swap;
-    src: url("../assets/fonts/archivo.woff2") format("woff2");
+    src: url("../assets/fonts/bricolage-grotesque-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 100 1000;
+    font-display: swap;
+    src: url("../assets/fonts/dm-sans-latin.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 100 1000;
+    font-display: swap;
+    src: url("../assets/fonts/dm-sans-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
   }
   /* Illustrations keep the light palette in dark mode, like the photos */
   :root, .figure, .svc-card, .svc-arrow, .app-stage, .liquid-tile, .ex-card {
     color-scheme: light;
     /* Brand kit https://…/Manual_Identidad.md (v2.0 Puente Cauce): Marfil, Blanco, Carbón, Naranja Cauce.
        Naranja Cauce is fills and graphics only (3.2:1 on white); text uses the derived --terra-ink. */
-    --cream: #FAF4E8;
+    --cream: #FCFBF8;
+    --marfil: #FAF4E8;
     --surface: #FFFFFF;
     --ink: #20211F;
     --terra: #EF633C;
     /* derived from the kit */
-    --paper: #F2E9D8;
+    --paper: var(--marfil);
     --line: #E5D9C4;
     --ink-2: #4E4D48;
     --terra-ink: #B5401C;
@@ -40,8 +56,8 @@
     --river: #A8CFE3;
     --river-ink: #2B6684;
     --river-tint: #E2EFF6;
-    --serif: "Instrument Serif", ui-serif, "New York", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-    --sans: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --serif: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+    --sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
     --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
     /* Radius carries meaning: printed surfaces stay square, controls get a slight cut, tags and rails are pills.
        --r-glass is the one rounded material (S13): a translucent panel reads as a different object from a card. */
@@ -83,7 +99,7 @@
   h1, h2, h3 { font-family: var(--serif); font-weight: 400; letter-spacing: -.005em; margin: 0; }
   /* emphasis in headlines is color only, never italic */
   h1 em, h2 em { font-style: normal; }
-  h2 { font-size: clamp(38px, 4.8vw, 62px); line-height: 1.02; }
+  h2 { font-size: clamp(34px, 4vw, 54px); line-height: 1.1; }
   .lead { color: var(--ink-2); font-size: 19px; max-width: 56ch; }
   .link { text-underline-offset: 3px; }
   .link:hover { color: var(--terra-ink); }
@@ -125,10 +141,10 @@
   .menu-cta { display: none; }
   .nav ul a[aria-current="page"] { color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--terra); text-decoration-thickness: 2px; text-underline-offset: 8px; }
 
-  /* Hero: the copy sits on cream, the live dotted bridge runs behind it (src/hero-dots.mjs) */
+  /* Hero: the copy sits on paper, the live dotted bridge runs behind it (src/hero-dots.mjs) */
   .hero { position: relative; padding: clamp(56px, 8vw, 96px) 0 clamp(40px, 6vw, 96px); overflow: hidden; }
   .hero-copy { position: relative; z-index: 2; max-width: 880px; text-align: center; }
-  .hero h1 { margin-top: 16px; font-size: clamp(46px, 6.9vw, 104px); line-height: .95; text-wrap: balance; }
+  .hero h1 { margin-top: 16px; font-size: clamp(42px, 5.6vw, 80px); line-height: 1.02; text-wrap: balance; }
   .hero h1 em { color: var(--terra-ink); }
   .hero .lead { margin: 24px auto 32px; }
   .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
