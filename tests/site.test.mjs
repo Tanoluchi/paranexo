@@ -167,6 +167,17 @@ test('the carousel module is shared and only the page with a track wires it', ()
   }
 });
 
+test('the Services page starts from business problems and demonstrates the result', () => {
+  const hub = readFileSync(new URL('../servicios/index.html', import.meta.url), 'utf8');
+  const chooser = hub.match(/<nav aria-label="Ir a un problema">[\s\S]*?<\/nav>/)?.[0] ?? '';
+  assert.match(chooser, /href="#software">Tengo todo en planillas/);
+  assert.match(chooser, /href="#automatizaciones">Cargo el mismo dato varias veces/);
+  assert.match(chooser, /href="#ia">No sé si la IA me sirve/);
+  assert.ok(hub.indexOf('id="carrusel"') < hub.indexOf('id="tres"'));
+  assert.match(hub, /<h3>Mis pedidos y stock están en planillas<\/h3>/);
+  assert.match(hub, /<h3>Cargo el mismo dato varias veces<\/h3>/);
+});
+
 test('every service card on the hub shows a described example and links to its detail', () => {
   const hub = readFileSync(new URL('../servicios/index.html', import.meta.url), 'utf8');
   const cards = hub.match(/<li class="svc-card[\s\S]*?<\/li>\s*(?=<li class="svc-card|<\/ul>)/g) ?? [];
