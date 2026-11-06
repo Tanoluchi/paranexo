@@ -125,9 +125,12 @@ test('team cards lead with their role, with no empty photo frames', () => {
   members.forEach((m, i) => assert.match(m, new RegExp(`<h3[^>]*>\\s*${roles[i]}\\s*</h3>`)));
 });
 
-test('the home shows the three applications between the problems and the FAQ', () => {
+test('the home leads with the three illustrative applications before explaining problems', () => {
   const at = id => html.indexOf(`id="${id}"`);
-  assert.ok(at('problemas') > -1 && at('servicios') > at('problemas') && at('preguntas') > at('servicios'));
+  assert.ok(at('servicios') > -1 && at('problemas') > at('servicios') && at('preguntas') > at('problemas'));
+  assert.match(html, /Hablás con quienes construyen/);
+  assert.match(html, /Precio y alcance por escrito/);
+  assert.match(html, /Capacitación y seguimiento/);
   assert.match(html, /<h2 id="apps-title">Así se ve en tu negocio<\/h2>/);
   assert.match(html, /<div class="app-tabs reveal" role="tablist"/);
   assert.equal((html.match(/role="tab"/g) ?? []).length, 3);
@@ -292,7 +295,7 @@ test('the brand kit, its palette and the glass material are shared by every page
   assert.match(glass, /\.frost::before/);
 });
 
-test('the footer is the Paseo del Paraná band with the kit brand, mail pill, socials, columns and legal row', () => {
+test('the footer is the Paseo del Paraná band with a working mail contact, columns and legal row', () => {
   const footer = html.match(/<footer class="footer">[\s\S]*?<\/footer>/)?.[0] ?? '';
   assert.match(footer, /assets\/footer-paseo-parana\.jpg/);
   assert.match(footer, /alt="[^"]*Paseo del Paraná[^"]*"/);
@@ -302,15 +305,7 @@ test('the footer is the Paseo del Paraná band with the kit brand, mail pill, so
   assert.match(footer, /assets\/brand\/logo-horizontal-color-dark\.svg/);
   assert.match(footer, /class="foot-mail" href="mailto:hola@paranexo\.com"/);
   assert.match(footer, /href="#i-mail"/);
-  const socials = footer.match(/<ul class="socials"[\s\S]*?<\/ul>/)?.[0] ?? '';
-  assert.match(socials, /aria-label="Paranexo en Instagram"[\s\S]*assets\/social\/instagram\.png/);
-  assert.match(socials, /aria-label="Paranexo en X"[\s\S]*assets\/social\/x\.svg/);
-  assert.match(footer, /href="#" data-todo="instagram-url"/);
-  // the mail pill and the social tiles share one height, and no inherited link padding moves the icons
-  for (const rule of css('landing.css').match(/\{[^{}]*\}/g)) {
-    if (/\.footer \.social \{/.test(rule)) assert.match(rule, /padding: 0/);
-  }
-  assert.match(css('landing.css'), /\.footer \.social img \{[^}]*width: 44px; height: 44px/);
+  assert.doesNotMatch(footer, /href="#"|data-todo=/);
   assert.match(footer, /href="\.\/servicios\/software-a-medida\/"/);
   assert.match(footer, /href="\.\/privacidad\.html"/);
   assert.match(footer, /27\.47°S 58\.83°W/);
