@@ -14,61 +14,67 @@
     font-display: swap;
     src: url("../assets/fonts/archivo.woff2") format("woff2");
   }
-  /* Illustrations (.figure, .svc-card, .svc-arrow) keep the light palette in dark mode, like the photos */
-  :root, .figure, .svc-card, .svc-arrow {
+  /* Illustrations keep the light palette in dark mode, like the photos */
+  :root, .figure, .svc-card, .svc-arrow, .app-stage, .liquid-tile, .ex-card {
     color-scheme: light;
-    --cream: #FCF8EF;
-    --paper: #F5EDDE;
-    --line: #E6D9C3;
-    --ink: #1E2A2F;
-    --ink-2: #4A5459;
-    --terra: #D9572B;
-    --terra-ink: #A23C16;
+    /* Brand kit https://…/Manual_Identidad.md (v2.0 Puente Cauce): Marfil, Blanco, Carbón, Naranja Cauce.
+       Naranja Cauce is fills and graphics only (3.2:1 on white); text uses the derived --terra-ink. */
+    --cream: #FAF4E8;
+    --surface: #FFFFFF;
+    --ink: #20211F;
+    --terra: #EF633C;
+    /* derived from the kit */
+    --paper: #F2E9D8;
+    --line: #E5D9C4;
+    --ink-2: #4E4D48;
+    --terra-ink: #B5401C;
+    --terra-tint: #FCE3D8;
+    /* dark bands are Carbón from the kit */
+    --petrol: #20211F;
+    --on-petrol: #FAF4E8;
+    --on-petrol-2: #E6DECC;
+    --on-petrol-3: #D8CFBD;
+    --terra-soft: #F59B7C;
+    --terra-on-petrol: #F6A184;
+    /* blue is not a kit colour: it survives only as the river inside illustrations and data */
     --river: #A8CFE3;
     --river-ink: #2B6684;
-    --petrol: #274B57;
-    --surface: #FFFFFF;
-    --terra-tint: #FBE6DA;
     --river-tint: #E2EFF6;
     --serif: "Instrument Serif", ui-serif, "New York", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
     --sans: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-    /* Radius carries meaning: surfaces stay square, controls get a slight cut, tags and rails are pills, icon buttons are circles */
+    /* Radius carries meaning: printed surfaces stay square, controls get a slight cut, tags and rails are pills.
+       --r-glass is the one rounded material (S13): a translucent panel reads as a different object from a card. */
     --r-surface: 0;
     --r-control: 3px;
     --r-pill: 999px;
+    --r-glass: 20px;
+    --r-glass-sm: 14px;
     --ease: cubic-bezier(.22,.8,.26,1);
+    --spring: cubic-bezier(.3, 1.35, .45, 1);
   }
   /* Dark mode is a user toggle (src/theme.mjs); light is the default; the <head> script applies a saved dark choice before paint */
   :root[data-theme="dark"] {
-      color-scheme: dark;
-      --cream: #12191C;
-      --paper: #182327;
-      --surface: #1C282D;
-      --line: #2E3C42;
-      --ink: #EEE8DC;
-      --ink-2: #AFB9BC;
-      --terra: #E8693A;
-      --terra-ink: #F4A47F;
-      --terra-tint: #3A2219;
-      --river-ink: #8FC3DC;
-      --river-tint: #18303A;
-      --iso-pylon: #8FB6C8;
-  }
-  /* Text roles and accents on the petrol bands; the same in both themes.
-     Reading text stays at 7:1 or more on --petrol (--on-petrol-3 and --terra-on-petrol);
-     --terra-soft is graphics only, at 3:1 or more. */
-  :root {
-    --on-petrol: #F4F8F9;
-    --on-petrol-2: #DBE6E8;
-    --on-petrol-3: #DAE5E7;
-    --terra-soft: #F4A47F;
-    --terra-on-petrol: #FDDCC9;
+    color-scheme: dark;
+    --cream: #1A1B18;
+    --paper: #20211F;
+    --surface: #212220;
+    --line: #37382F;
+    --ink: #FAF4E8;
+    --ink-2: #C8C1B2;
+    --terra: #EF633C;
+    --terra-ink: #F79A78;
+    --terra-tint: #38231A;
+    --petrol: #111210;
+    --river-ink: #8FB9CF;
+    --river-tint: #1E2A30;
+    --iso-pylon: #8FB6C8;
   }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overflow-x: clip; scrollbar-color: var(--line) transparent; }
   body { margin: 0; background: var(--cream); color: var(--ink); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
   a { color: inherit; }
+  ::selection { background: var(--terra-ink); color: var(--cream); }
   :focus-visible { outline: 3px solid var(--terra); outline-offset: 3px; border-radius: var(--r-control); }
   .skip { position: absolute; left: -999px; top: 8px; background: var(--ink); color: var(--cream); padding: 8px 16px; z-index: 99; }
   .skip:focus { left: 8px; }
@@ -79,6 +85,8 @@
   h1 em, h2 em { font-style: normal; }
   h2 { font-size: clamp(38px, 4.8vw, 62px); line-height: 1.02; }
   .lead { color: var(--ink-2); font-size: 19px; max-width: 56ch; }
+  .link { text-underline-offset: 3px; }
+  .link:hover { color: var(--terra-ink); }
   .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: var(--r-control); font-weight: 600; text-decoration: none; border: 1.5px solid var(--ink); transition: transform .15s var(--ease), background-color .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease); cursor: pointer; font-size: 16px; }
   .btn:active { transform: scale(.98); }
   .btn-primary { background: var(--ink); color: var(--cream); }
@@ -86,20 +94,25 @@
   .btn-ghost { background: transparent; color: var(--ink); }
   .btn .arrow { transition: transform .2s var(--ease); }
   .btn:hover .arrow { transform: translateX(4px); }
+  .mini { min-height: 44px; padding: 8px 16px; font-size: 14px; }
 
   /* Nav */
   .nav { position: sticky; top: 0; z-index: 30; background: color-mix(in srgb, var(--cream) 86%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid transparent; transition: border-color .2s var(--ease), background-color .3s var(--ease); }
-  .nav.scrolled { border-color: var(--line); background: color-mix(in srgb, var(--cream) 94%, transparent); }
-  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; }
-  .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; text-decoration: none; letter-spacing: -.01em; font-size: 18px; }
-  .iso { flex: none; overflow: visible; }
-  .footer .iso { --iso-pylon: var(--river); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 12px; transition: height .35s var(--ease), margin .35s var(--ease), padding .35s var(--ease), background-color .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease), border-radius .35s var(--ease); border: 1px solid transparent; border-radius: 0; }
+  /* a glass pill once the page scrolls (S13) */
+  .nav.scrolled { background: transparent; border-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .nav.scrolled .wrap { height: 60px; margin-top: 10px; padding-inline: 20px 10px; border-radius: var(--r-pill); background: var(--glass-tint-strong); border-color: var(--glass-rim); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); box-shadow: inset 0 1px 0 var(--glass-edge), var(--glass-shadow); }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; text-decoration: none; letter-spacing: -.01em; font-size: 18px; white-space: nowrap; }
+  .brand img { display: block; width: 216px; height: auto; }
+  .brand .logo-dark, .brand-logo.logo-dark { display: none; }
+  :root[data-theme="dark"] .brand .logo-light, :root[data-theme="dark"] .brand-logo.logo-light { display: none; }
+  :root[data-theme="dark"] .brand .logo-dark, :root[data-theme="dark"] .brand-logo.logo-dark { display: block; }
   .nav ul { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; font-size: 15px; }
   .nav ul a { text-decoration: none; color: var(--ink-2); }
   .nav ul a:hover { color: var(--ink); }
-  .nav .btn { padding: 10px 16px; font-size: 15px; }
+  .nav .btn { padding: 10px 16px; font-size: 15px; border-radius: var(--r-control); }
   .nav-actions { display: flex; align-items: center; gap: 8px; }
-  .theme-toggle { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%; border: 1.5px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; transition: border-color .2s var(--ease); }
+  .theme-toggle { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%; border: 1.5px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; transition: border-color .2s var(--ease); flex: none; }
   .theme-toggle:hover { border-color: var(--ink); }
   .theme-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   .theme-toggle .icon-sun, [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
@@ -109,11 +122,10 @@
   .menu-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
   .menu-toggle .icon-close, .menu-toggle[aria-expanded="true"] .icon-menu { display: none; }
   .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
-  .brand { white-space: nowrap; }
-  .nav .wrap { gap: 12px; }
-  .theme-toggle { flex: none; }
+  .menu-cta { display: none; }
+  .nav ul a[aria-current="page"] { color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--terra); text-decoration-thickness: 2px; text-underline-offset: 8px; }
 
-  /* Hero */
+  /* Hero: the copy sits on cream, the live dotted bridge runs behind it (src/hero-dots.mjs) */
   .hero { position: relative; padding: clamp(56px, 8vw, 96px) 0 clamp(40px, 6vw, 96px); overflow: hidden; }
   .hero-copy { position: relative; z-index: 2; max-width: 880px; text-align: center; }
   .hero h1 { margin-top: 16px; font-size: clamp(46px, 6.9vw, 104px); line-height: .95; text-wrap: balance; }
@@ -121,13 +133,17 @@
   .hero .lead { margin: 24px auto 32px; }
   .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
   .hero-copy .hero-ctas { justify-content: center; }
-  /* The dotted bridge sits behind the whole hero (src/hero-dots.mjs), faint under the text; without JS there is no scene and the copy stands alone */
+  .hero-copy .hero-ctas.cluster { display: inline-flex; padding: 8px; border-radius: calc(var(--r-control) + 8px); background: var(--glass-tint-strong); }
   .hero-scene { display: none; position: absolute; inset: 0; z-index: 1; pointer-events: none; }
   .js .hero-scene { display: block; -webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent); mask-image: linear-gradient(to bottom, #000 86%, transparent); }
   .hero-dots { display: block; width: 100%; height: 100%; }
+  .hero-chip { display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; padding: 8px 8px 8px 16px; min-height: 44px; border-radius: var(--r-pill); font: 500 15px/1.2 var(--sans); text-decoration: none; color: var(--ink); background: var(--glass-tint-strong); transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+  .hero-chip:hover { transform: translateY(-1px); }
+  .hero-chip .go { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--terra-tint); color: var(--terra-ink); font-size: 15px; transition: transform .2s var(--ease); }
+  .hero-chip:hover .go { transform: translateX(3px); }
+  .js .hero-copy .hero-chip { opacity: 0; transform: translateY(14px); animation: rise .8s var(--ease) 1.05s forwards; }
 
-
-  section { padding: clamp(64px, 10vw, 120px) 0; }
+  section { padding: clamp(64px, 10vw, 120px) 0; scroll-margin-top: 72px; }
   /* the first section hugs the hero, which already carries the bottom gap for the bridge */
   #problemas { padding-top: 0; }
   /* home CTA: the FAQ section already carries the bottom gap (keep other pages' .cta spacing) */
@@ -135,11 +151,15 @@
   .sec-head { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; margin-bottom: clamp(32px, 5vw, 64px); }
   .sec-head .eyebrow { display: block; margin-bottom: 16px; }
 
-  /* Problems */
-  .problems { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
-  .problem { padding: 28px 24px 28px 0; border-right: 1px solid var(--line); }
-  .problem + .problem { padding-left: 24px; }
-  .problem:last-child { border-right: 0; }
+  /* Problems: glass cards floating over a shared liquid field */
+  #problemas { position: relative; overflow: clip; padding-block: 0 clamp(64px, 10vw, 120px); }
+  .problems { display: grid; grid-template-columns: repeat(4, 1fr); position: relative; isolation: isolate; gap: 20px; }
+  .problems > .blobs { inset: -40px; -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent); mask-image: radial-gradient(closest-side, #000 55%, transparent); --b1: var(--terra-tint); --b2: var(--terra); --b3: var(--paper); --blob-op: .46; }
+  .problems > .blobs i:nth-child(1) { left: -6%; top: -10%; width: 40%; }
+  .problems > .blobs i:nth-child(2) { right: -4%; top: 20%; width: 36%; }
+  .problems > .blobs i:nth-child(3) { left: 30%; bottom: -20%; width: 34%; }
+  .problem { padding: 28px 24px; background: var(--glass-tint-strong); transition: translate .3s var(--ease), box-shadow .3s var(--ease); }
+  .problem:hover { translate: 0 -4px; }
   /* three lines of quote, so the four answers start on the same line */
   .problem .q { font: 400 23px/1.25 var(--serif); margin: 0 0 12px; min-height: calc(3 * 1.25em); }
   .problem .a { font-size: 15px; color: var(--ink-2); margin: 0; }
@@ -149,16 +169,12 @@
   /* Grid children default to min-width:auto, so a wide figure could push the page sideways */
   .split > * { min-width: 0; }
   .figure { max-width: 100%; overflow: hidden; }
-  .figure { background: var(--cream); border: 1px solid var(--line); border-radius: var(--r-surface); padding: 24px; min-height: 380px; position: relative; box-shadow: 0 30px 60px -40px rgba(30,42,47,.35); }
+  .figure { background: var(--cream); border: 1px solid var(--line); border-radius: var(--r-surface); padding: 24px; min-height: 380px; position: relative; box-shadow: 0 30px 60px -40px rgba(32,33,31,.35); }
   .fig-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font: 600 12px var(--mono); color: var(--ink-2); }
   .dots { display: flex; gap: 6px; } .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--terra); opacity: .8; }
-
-
   .flow-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 12px; }
   .counter { font: 600 13px var(--mono); color: var(--ink-2); }
   .counter b { color: var(--terra-ink); font-size: 18px; }
-  .mini { min-height: 44px; padding: 8px 16px; font-size: 14px; }
-
 
   /* Services carousel: petrol band, tall cards with a screenshot cropped by the bottom edge, native scroll-snap */
   .svc { background: var(--petrol); color: var(--on-petrol-2); }
@@ -192,6 +208,8 @@
   .svc-arrow:active:not(:disabled) { transform: scale(.96); }
   .svc-arrow:disabled { background: transparent; border-color: color-mix(in srgb, var(--on-petrol-2) 24%, transparent); color: color-mix(in srgb, var(--on-petrol-2) 40%, transparent); cursor: default; }
   .svc-arrow svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* Process banner (also used by the process and team pages) */
 
   /* Process banner (also used by the process and team pages) */
   .process-banner { position: relative; overflow: hidden; margin-top: 28px; background: var(--petrol); color: var(--on-petrol); border-radius: var(--r-surface); padding: 48px 56px 48px 96px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
@@ -237,18 +255,28 @@
   summary { list-style: none; cursor: pointer; padding: 24px 0; display: flex; justify-content: space-between; gap: 16px; font: 400 23px/1.3 var(--serif); }
   summary::-webkit-details-marker { display: none; }
   summary .plus { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--ink); display: grid; place-items: center; transition: transform .2s var(--ease), background-color .2s var(--ease); font: 400 18px/1 var(--sans); }
+  summary:hover .plus { background: var(--terra-tint); border-color: var(--terra-ink); }
   details[open] summary .plus { transform: rotate(45deg); background: var(--ink); color: var(--cream); }
+  details[open] summary:hover .plus { background: var(--ink); }
   details p { margin: 0 0 24px; color: var(--ink-2); max-width: 60ch; }
-  .help { margin-top: 32px; padding: 24px; border-radius: var(--r-surface); background: var(--paper); }
+  .help { position: relative; isolation: isolate; overflow: hidden; margin-top: 32px; padding: 24px; border-radius: var(--r-glass); background: var(--paper); --b1: var(--terra-tint); --b2: var(--terra-soft); --b3: var(--terra); --blob-op: .5; --frost: 60%; }
+  .help .blobs i:nth-child(1) { width: 70%; } .help .blobs i:nth-child(2) { width: 60%; }
   .help b { font: 400 23px var(--serif); display: block; }
 
   /* CTA */
-  .cta { text-align: center; padding: clamp(80px, 11vw, 140px) 0 clamp(88px, 12vw, 160px); position: relative; overflow: hidden; }
+  .cta { text-align: center; overflow: visible; padding-block: 0 clamp(72px, 10vw, 120px); position: relative; }
+  .cta .wrap { position: relative; }
+  .cta-panel { padding: clamp(64px, 9vw, 112px) 24px clamp(88px, 11vw, 152px); border-radius: calc(var(--r-glass) + 12px); --b1: var(--terra); --b2: var(--terra-tint); --b3: var(--petrol); --blob-op: .6; --frost: 58%; text-align: center; box-shadow: 0 40px 70px -50px rgba(32,33,31,.5); }
+  .cta-panel .eyebrow { display: inline-block; }
   .cta h2 { font-size: clamp(54px, 7.6vw, 112px); line-height: .92; }
   .cta h2 em { color: var(--terra-ink); }
   .cta .lead { margin: 24px auto 32px; }
   .cta .hero-ctas { justify-content: center; }
   .cta-arc { position: absolute; left: 50%; bottom: -1px; transform: translateX(-50%); width: 1400px; max-width: none; opacity: .5; }
+  .cta-panel .cta-arc { bottom: -1px; z-index: -1; opacity: .55; }
+  .cta-panel .blobs i:nth-child(1) { left: -10%; top: -40%; width: 46%; }
+  .cta-panel .blobs i:nth-child(2) { right: -8%; top: 10%; width: 44%; }
+  .cta-panel .blobs i:nth-child(3) { left: 36%; bottom: -60%; width: 40%; }
 
   /* Footer */
   .footer { position: relative; background: var(--petrol); color: var(--on-petrol-2); }
@@ -283,20 +311,32 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
     .reveal, .reveal-items > * { opacity: 1; transform: none; }
-    .hero h1 .w, .js .hero-copy .eyebrow, .js .hero-copy .lead, .js .hero-copy .hero-ctas { opacity: 1; transform: none; }
+    .hero h1 .w, .js .hero-copy .eyebrow, .js .hero-copy .lead, .js .hero-copy .hero-ctas, .js .hero-copy .hero-chip { opacity: 1; transform: none; }
+    .blobs i, .petal, .water i, .dotspin { animation: none; }
+    .petal { display: none; }
+  }
+  @media (max-width: 1100px) {
+    .foot-grid { grid-template-columns: repeat(4, auto); justify-content: space-between; }
+    .foot-grid > :first-child { grid-column: 1 / -1; }
   }
   @media (max-width: 900px) {
     .nav ul { display: none; }
     .menu-toggle { display: grid; }
-    .nav.open ul { display: flex; flex-direction: column; gap: 0; position: absolute; top: 100%; left: 0; right: 0; padding: 8px 24px 16px; background: var(--cream); border-bottom: 1px solid var(--line); font-size: 17px; }
+    .nav.open ul { display: flex; flex-direction: column; gap: 0; position: absolute; top: calc(100% + 8px); left: 12px; right: 12px; padding: 8px 20px 12px; border-radius: var(--r-glass); background: color-mix(in srgb, var(--surface) 95%, transparent); border: 1px solid var(--glass-rim); box-shadow: inset 0 1px 0 var(--glass-edge), var(--glass-shadow); font-size: 17px; }
+    .nav.open ul li + li { border-top: 1px solid var(--glass-rim); }
     .nav.open ul a { display: block; padding: 12px 0; color: var(--ink); }
+    .nav.open .menu-cta { display: block; }
+    .nav.scrolled .wrap, .nav .wrap { padding-inline: 0; }
+    .nav.scrolled .wrap { padding-inline: 16px 8px; }
     .sec-head, .faq-grid { grid-template-columns: 1fr; }
+    .sec-head { gap: 20px; }
     .process-banner { flex-direction: column; align-items: flex-start; padding: 32px 24px; }
-    .problems, .footer-grid { grid-template-columns: 1fr 1fr; }
+    .problems { grid-template-columns: 1fr 1fr; }
     .problem .q { min-height: 0; }
-    .svc-card { flex-basis: 320px; height: 520px; }
-    .svc-card h3 { font-size: 26px; }
-    .footer-grid > :first-child { grid-column: 1 / -1; }
+    .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .foot-brand { grid-column: 1 / -1; }
+    .foot-brand .brand-logo { width: 196px; }
+    .brand img { width: 190px; }
     .team { grid-template-columns: 1fr; gap: 16px; }
     .member { border-radius: var(--r-surface); border-bottom: 1px solid rgba(255,255,255,.16); }
     .sun { width: 44px; height: 44px; }
@@ -304,28 +344,25 @@
   @media (max-width: 640px) {
     .hero { padding-bottom: calc(22vw + 40px); } /* room for the whole bridge under the copy */
     .js .hero-scene { -webkit-mask-image: linear-gradient(to bottom, #000 94%, transparent); mask-image: linear-gradient(to bottom, #000 94%, transparent); }
-    .svc-head { text-align: left; }
-    .svc-head .lead { margin-inline: 0; font-size: 17px; }
-    .svc h2 { font-size: 34px; }
-    .svc-track { margin-top: 32px; gap: 12px; }
-    .svc-card { flex-basis: 82vw; height: 500px; }
-    .svc-text { padding: 28px 20px 0; }
-    .svc-card h3 { font-size: 26px; }
-    .svc-card p { font-size: 16px; }
+    .foot-art { height: clamp(170px, 46vw, 230px); }
+    .foot-body { margin-top: -40px; }
+    .foot-art > img { object-position: 42% 66%; }
+    .foot-grid { grid-template-columns: 1fr 1fr; gap: 22px 20px; }
+    .foot-brand { grid-column: 1 / -1; }
+    .foot-legal { flex-direction: column; gap: 6px; }
     .problems { grid-template-columns: 1fr; }
-    .problem, .problem + .problem { padding: 24px 0; border-right: 0; border-bottom: 1px solid var(--line); }
+    .problem { padding: 24px 22px; border-bottom: 1px solid var(--glass-rim); border-right: 1px solid var(--glass-rim); }
     .step .pin { align-self: flex-start; }
     .cta-arc { display: none; }
-    .legal { position: static; padding: 16px 0 20px; }
-    .legal .wrap { flex-wrap: wrap; gap: 8px; }
+    .cta-panel { padding-inline: 20px; }
   }
   @media (max-width: 560px) {
-    .nav .btn { padding: 10px 12px; }
-    .nav-actions { gap: 8px; }
+    .brand img { width: 150px; }
+    .nav .btn-primary { display: none; }
+    .nav .wrap { gap: 8px; }
+    .nav-actions { gap: 6px; }
   }
   @media (max-width: 400px) {
-    /* icon-only brand on small phones; the link keeps its aria-label */
-    .nav .brand { font-size: 0; }
     .member.has-photo { grid-template-columns: 1fr; }
     .portrait { max-width: 220px; }
   }

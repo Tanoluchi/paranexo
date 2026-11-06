@@ -239,3 +239,26 @@ test('the hero bridge builds once, pauses when hidden and keeps cursor effects t
   assert.match(dots, /hover: hover\) and \(pointer: fine/);
   assert.match(css('landing.css'), /\.hero-scene[^}]*mask-image/);
 });
+
+test('the brand kit, its palette and the glass material are shared by every page; the fonts stay the live ones', () => {
+  for (const page of [html, readFileSync(new URL('../servicios/index.html', import.meta.url), 'utf8'), readFileSync(new URL('../contacto/index.html', import.meta.url), 'utf8')]) {
+    assert.match(page, /assets\/brand\/logo-horizontal-color\.svg/);
+    assert.match(page, /assets\/brand\/logo-horizontal-color-dark\.svg/);
+    assert.match(page, /<link rel="icon" href="[^"]*assets\/favicon\.svg">/);
+    assert.match(page, /styles\/glass\.css/);
+  }
+  const styles = css('landing.css');
+  for (const [token, value] of [['--cream', '#FAF4E8'], ['--surface', '#FFFFFF'], ['--ink', '#20211F'], ['--terra', '#EF633C'], ['--terra-ink', '#B5401C'], ['--petrol', '#20211F']]) {
+    assert.ok(styles.includes(`${token}: ${value};`), `${token} must come from the kit (${value})`);
+  }
+  assert.match(styles, /--r-glass: 20px/);
+  // S16: no font or type change
+  assert.match(styles, /@font-face \{[\s\S]*?font-family: "Instrument Serif"/);
+  assert.match(styles, /@font-face \{[\s\S]*?font-family: "Archivo"/);
+  assert.match(styles, /--serif: "Instrument Serif"/);
+  assert.match(styles, /--sans: "Archivo"/);
+  const glass = css('glass.css');
+  assert.match(glass, /\.glass \{[^}]*backdrop-filter/);
+  assert.match(glass, /@keyframes ooze/);
+  assert.match(glass, /\.frost::before/);
+});
