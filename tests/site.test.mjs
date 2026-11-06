@@ -167,16 +167,23 @@ test('the carousel module is shared and only the page with a track wires it', ()
   }
 });
 
-test('the service photos keep their dimensions and descriptions where they are used', () => {
-  const names = ['software-a-medida', 'automatizaciones', 'bots', 'agentes', 'ia-para-tu-negocio', 'diseno-web', 'integraciones'];
-  for (const name of names) assert.ok(existsSync(new URL(`../assets/servicios/${name}.jpg`, import.meta.url)), `${name}.jpg missing on disk`);
+test('every service card on the hub shows a described example and links to its detail', () => {
   const hub = readFileSync(new URL('../servicios/index.html', import.meta.url), 'utf8');
-  const images = hub.match(/<img[^>]*assets\/servicios\/[^>]*>/g) ?? [];
-  assert.ok(images.length >= 3);
-  for (const tag of images) {
-    assert.match(tag, /width="720"/);
-    assert.match(tag, /height="1080"/);
-    assert.match(tag, /alt="[^"]+"/);
+  const cards = hub.match(/<li class="svc-card[\s\S]*?<\/li>\s*(?=<li class="svc-card|<\/ul>)/g) ?? [];
+  assert.equal(cards.length, 7);
+  for (const card of cards) {
+    assert.match(card, /<h3>[^<]+<\/h3>/);
+    assert.match(card, /role="img" aria-label="Ejemplo ilustrativo: [^"]+"/);
+    const target = card.match(/class="link" href="#([a-z]+)"/)?.[1];
+    assert.ok(target && hub.includes(`id="${target}"`), `card links to a missing #${target}`);
+  }
+  // service photos, wherever a page still shows one, keep their dimensions and description
+  for (const page of PAGES) {
+    for (const tag of read(page.out).match(/<img[^>]*assets\/servicios\/[^>]*>/g) ?? []) {
+      assert.match(tag, /width="720"/);
+      assert.match(tag, /height="1080"/);
+      assert.match(tag, /alt="[^"]+"/);
+    }
   }
 });
 
