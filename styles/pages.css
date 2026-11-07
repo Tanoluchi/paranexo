@@ -21,7 +21,6 @@
 .split h2 { font: 400 clamp(23px, 2.3vw, 30px)/1.2 var(--serif); margin: 32px 0 12px; }
 .split h2:first-child { margin-top: 0; }
 .split p { margin: 0 0 12px; color: var(--ink-2); }
-.split .figure { position: sticky; top: 96px; }
 .includes { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
 .includes li { display: flex; gap: 10px; align-items: baseline; font-size: 16px; }
 .includes li::before { content: "→"; color: var(--terra-ink); font-size: 14px; }
@@ -90,5 +89,4 @@
 @media (max-width: 900px) {
   .hub-cards { grid-template-columns: 1fr; }
   .split { grid-template-columns: 1fr; }
-  .split .figure { position: static; }
   }
