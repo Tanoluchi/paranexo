@@ -96,7 +96,11 @@ test('the hub links every service page', () => {
 test('the process page keeps the five steps in order', () => {
   const process = read('como-trabajamos/index.html');
   const steps = ['Nos contás tu problema o idea', 'Analizamos tus necesidades', 'Diseñamos una solución', 'Desarrollamos y validamos', 'Implementamos y acompañamos'];
-  assert.equal((process.match(/<li>\s*<span class="n"/g) ?? []).length, 5);
+  assert.equal((process.match(/<li class="pier">/g) ?? []).length, 5);
+  // each step says what the client does, what the team does and what the client keeps
+  assert.equal((process.match(/class="you"/g) ?? []).length, 5);
+  assert.equal((process.match(/class="us"/g) ?? []).length, 5);
+  assert.equal((process.match(/class="takeaway"/g) ?? []).length, 5);
   steps.forEach((step, i) => assert.ok(process.indexOf(step) > 0, `process page must keep the step "${step}"`));
   steps.slice(1).forEach((step, i) => assert.ok(process.indexOf(step) > process.indexOf(steps[i]), `step "${step}" must come after "${steps[i]}"`));
 });
@@ -135,4 +139,14 @@ test('the home keeps one diagnosis and no stale form copy', () => {
   const ctas = main.match(/class="btn btn-primary"[^>]*>([^<]+)/g) ?? [];
   assert.ok(ctas.length >= 2);
   for (const cta of ctas) assert.match(cta, />Hablemos de tu proyecto/);
+});
+
+test('the process and team pages share the Services hero', () => {
+  for (const page of ['servicios/', 'como-trabajamos/', 'quienes-somos/']) {
+    const html = read(`${page}index.html`);
+    assert.match(html, /<header class="hero page-hero" id="top">\s*<span class="blobs" aria-hidden="true">/, page);
+    assert.match(html, /<div class="wrap hero-copy">/, page);
+    assert.match(html, /class="hero-ctas cluster glass"/, page);
+  }
+  assert.match(readFileSync(new URL('../styles/pages.css', import.meta.url), 'utf8'), /\.hero\.page-hero \.hero-copy::before/);
 });

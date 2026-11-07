@@ -155,14 +155,6 @@
   .nav ul a[aria-current="page"] { color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--terra); text-decoration-thickness: 2px; text-underline-offset: 8px; }
   .footer .foot-links a[aria-current="page"] { color: var(--ink); font-weight: 600; }
 
-  /* Page hero: the home hero without the dotted bridge */
-  .hero.page-hero { padding-block: clamp(56px, 8vw, 104px) clamp(48px, 6vw, 80px); }
-  .page-hero .hero-copy { max-width: 960px; }
-  .page-hero h1 { font-size: clamp(42px, 6.2vw, 92px); }
-  .page-hero > .blobs { --blob-op: .3; }
-  /* a paper veil under the copy keeps the lead at AA while the liquid field moves around it */
-  .page-hero .hero-copy::before { content: ""; position: absolute; inset: -12% -8%; z-index: -1; pointer-events: none; background: radial-gradient(closest-side, color-mix(in srgb, var(--cream) 90%, transparent) 62%, transparent); }
-  .page-hero .lead { color: var(--ink); }
   .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 780px; margin: 28px auto 0; padding: 0; list-style: none; }
   .chips a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: var(--r-pill); font: 500 15px/1.2 var(--sans); color: var(--ink); text-decoration: none; transition: transform .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease); }
   .chips a:hover { transform: translateY(-2px); border-color: var(--terra-ink); color: var(--terra-ink); }
@@ -238,11 +230,6 @@
   .g-blk { transform-origin: top center; animation: gbuild 5.2s var(--ease) infinite backwards; animation-delay: var(--d, 0s); }
   @keyframes gbuild { 0%, 4% { opacity: 0; transform: translateY(6px); } 14%, 84% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; transform: translateY(6px); } }
   .stile.paused .glyph *, .stile.paused .glyph { animation-play-state: paused; }
-
-  /* Centered section heads on Services */
-  .sec-head-center { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 16px; text-align: center; }
-  .sec-head-center h2 { max-width: 20ch; text-wrap: balance; }
-  .sec-head-center .lead { margin: 0; max-width: 60ch; }
 
   /* Process mention: one line and a link, the steps live on their own page */
   .how-band { padding-block: clamp(56px, 8vw, 96px) clamp(40px, 6vw, 72px); }
