@@ -1,51 +1,6 @@
-  /* Services carousel: petrol band, tall cards with a screenshot cropped by the bottom edge, native scroll-snap */
-  .svc { background: var(--petrol); color: var(--on-petrol-2); }
-  .svc :focus-visible { outline-color: var(--terra-soft); }
-  .svc .eyebrow { display: block; color: var(--terra-on-petrol); margin-bottom: 16px; }
-  .svc h2 { color: var(--on-petrol); text-wrap: balance; }
-  .svc .lead { color: var(--on-petrol-3); margin: 16px 0 0; }
-  .svc .lead a { color: var(--terra-on-petrol); font-weight: 600; text-underline-offset: 3px; }
-  .svc .lead a:hover { color: var(--on-petrol); }
-  .svc-head { text-align: center; }
-  .svc-head .lead { margin-inline: auto; }
-  /* gutter lines the first card up with .wrap; percentages resolve against the full-width track */
-  .svc-track { --gutter: max(24px, calc((100% - 1200px) / 2)); display: flex; gap: 20px; list-style: none; margin: 48px 0 0; padding: 0 var(--gutter) 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; overscroll-behavior-x: contain; }
-  .svc-track::-webkit-scrollbar { display: none; }
-  .svc-track:focus-visible { outline-offset: -3px; border-radius: 0; }
-  .svc-card { position: relative; flex: 0 0 360px; height: 560px; scroll-snap-align: start; display: flex; flex-direction: column; overflow: hidden; background: var(--cream); color: var(--ink); border-radius: var(--r-surface); text-align: center; }
-  .svc-text { padding: 32px 24px 0; }
-  .svc-card h3 { min-height: 2.2em; font-size: 28px; line-height: 1.1; text-wrap: balance; }
-  .svc-card p { margin: 12px 0 0; min-height: 4.5em; color: var(--ink-2); font-size: 17px; line-height: 1.5; text-wrap: pretty; }
-  /* the card edge crops the screen image; a short fade into the cream makes the cut read as intended */
-  .svc-card .link { display: inline-block; margin-top: 14px; }
-  .svc-card::after { content: ""; position: absolute; inset: auto 0 0; height: 48px; background: linear-gradient(to bottom, transparent, var(--cream)); pointer-events: none; }
-  /* the screenshot's cream is the card's cream, so only the bottom edge crops it */
-  .svc-card img { display: block; flex: 1 1 0; min-height: 0; width: 100%; margin-top: 16px; object-fit: cover; object-position: top center; }
-  .svc-ctl { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 24px; }
-  .svc-prog { position: relative; flex: 1; max-width: 240px; height: 4px; border-radius: var(--r-pill); overflow: hidden; background: color-mix(in srgb, var(--on-petrol-2) 24%, transparent); }
-  .svc-prog i { position: absolute; top: 0; bottom: 0; left: 0; width: 30%; border-radius: var(--r-pill); background: var(--terra-soft); }
-  .svc-arrows { display: flex; gap: 8px; }
-  .svc-arrow { display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border-radius: 50%; border: 1.5px solid var(--line); background: var(--cream); color: var(--ink); cursor: pointer; transition: border-color .2s var(--ease), background-color .2s var(--ease), color .2s var(--ease), transform .15s var(--ease); }
-  .svc-arrow:hover:not(:disabled) { border-color: var(--terra-soft); }
-  .svc-arrow:active:not(:disabled) { transform: scale(.96); }
-  .svc-arrow:disabled { background: transparent; border-color: color-mix(in srgb, var(--on-petrol-2) 24%, transparent); color: color-mix(in srgb, var(--on-petrol-2) 40%, transparent); cursor: default; }
-  .svc-arrow svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
 
-  /* ---- Services carousel (S12 + S13): liquid-glass cards, each with a live mini-UI instead of a static screenshot ---- */
-  .svc-track { padding-top: 10px; padding-bottom: 28px; margin-top: 36px; }
-  .svc-card.liquid { --frost: 54%; background: var(--cream); transition: translate .3s var(--ease); }
-  .svc-card.liquid::after { height: auto; background: none; }
-  .svc-card:hover { translate: 0 -4px; }
-  .svc-card:nth-child(3n+1) { --b1: var(--terra); --b2: var(--terra-tint); --b3: var(--petrol); }
-  .svc-card:nth-child(3n+2) { --b1: var(--terra-soft); --b2: var(--petrol); --b3: var(--terra); }
-  .svc-card:nth-child(3n) { --b1: var(--petrol); --b2: var(--terra); --b3: var(--terra-tint); }
-  .svc-card .blobs i:nth-child(1) { left: -24%; top: 44%; width: 86%; }
-  .svc-card .blobs i:nth-child(2) { right: -34%; top: 58%; width: 74%; }
-  .svc-card .blobs i:nth-child(3) { left: 8%; top: -34%; width: 52%; opacity: .35; }
-  .svc-card .svc-text { position: relative; z-index: 1; }
-  .svc-card p { min-height: 4.5em; }
-  .svc-card.off *, .svc-card.off *::before, .svc-card.off *::after { animation-play-state: paused !important; }
+  /* Shared demo primitives for the inline examples */
 
   .demo { position: relative; flex: 1 1 0; min-height: 0; display: grid; align-content: start; gap: 10px; padding: 28px 16px 20px; text-align: left; }
   .mini { border-radius: var(--r-glass-sm); padding: 14px 14px 12px; }
@@ -54,102 +9,28 @@
   .mini .avatar { width: 28px; height: 28px; font-size: 12.5px; }
   .step { opacity: 0; transform: translateY(10px); transition: opacity .45s var(--ease), transform .6s var(--spring); }
   .step.on { opacity: 1; transform: none; }
-  .flow-cap { margin: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; font: 600 15px/1.3 var(--sans); color: var(--ink); }
 
-  /* Software a medida */
-  .srow { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) 54px; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--glass-rim); font-size: 14px; }
-  .srow .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .bar { height: 8px; border-radius: var(--r-pill); background: color-mix(in srgb, var(--ink) 9%, transparent); overflow: hidden; }
-  .bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--terra); transition: width 1s var(--ease); }
-  .srow.low .bar i { background: var(--terra-ink); }
-  .srow.on .bar i { width: var(--v); }
-  .num { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-2); }
-  .num b { color: var(--ink); font-weight: 600; }
-  .mini-f { display: flex; justify-content: space-between; align-items: baseline; padding-top: 10px; border-top: 1px solid var(--glass-rim); font-size: 14px; color: var(--ink-2); }
-  .mini-f b { font: 400 34px/1 var(--serif); color: var(--ink); font-variant-numeric: tabular-nums; }
-  .chipnew { position: absolute; right: 22px; bottom: 6px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: var(--r-pill); font: 600 13.5px/1.2 var(--sans); background: var(--glass-tint-strong); opacity: 0; transform: translateY(14px) scale(.94); transition: opacity .4s var(--ease), transform .7s var(--spring); }
-  .chipnew.on { opacity: 1; transform: none; }
-  .chipnew svg, .okchip svg, .src svg { width: 15px; height: 15px; flex: none; color: var(--terra-ink); }
-  .chipnew svg { fill: none; stroke: currentColor; }
-
-  /* Flow and Connectors: nodes placed on a fixed frame so the drawn edges always meet their centres */
-  .flow, .tiles-int { position: relative; height: 276px; }
-  /* diagrams keep air around their nodes; in the carousel pull them up so the nodes line up with the other examples' panels */
-  .svc-card .flow, .svc-card .tiles-int { margin-top: -27px; }
-  .edges { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-  .e { fill: none; stroke: var(--terra); stroke-width: 2; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 600; stroke-dashoffset: 600; transition: stroke-dashoffset .9s var(--ease); }
-  .e.on { stroke-dashoffset: 0; }
-  .node { position: absolute; left: var(--x); top: var(--y); transform: translate(-50%, -50%); width: 40%; padding: 12px 8px 10px; display: grid; justify-items: center; gap: 2px; text-align: center; border-radius: var(--r-glass-sm); background: color-mix(in srgb, var(--surface) 58%, transparent); border: 1px solid var(--glass-rim); opacity: .62; transition: opacity .5s var(--ease), background-color .5s var(--ease), border-color .5s var(--ease), box-shadow .5s var(--ease); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-  .node b { font: 600 15px/1.2 var(--sans); }
-  .node small { font: 400 12.5px/1.3 var(--sans); color: var(--ink-2); }
-  .node.on { opacity: 1; background: var(--glass-tint-strong); border-color: color-mix(in srgb, var(--terra) 55%, var(--glass-rim)); box-shadow: inset 0 1px 0 var(--glass-edge), var(--glass-shadow); }
-  .ni { display: grid; place-items: center; width: 32px; height: 32px; margin-bottom: 4px; border-radius: 50%; background: var(--terra-tint); color: var(--terra-ink); }
-  .ni.river { background: color-mix(in srgb, var(--petrol) 10%, var(--surface)); color: var(--petrol); }
-  .ni.petrol { background: color-mix(in srgb, var(--petrol) 12%, var(--surface)); color: var(--petrol); }
-  .ni svg, .tile svg { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-  .ni svg { width: 17px; height: 17px; }
-  .nck { position: absolute; top: -9px; right: -9px; width: 22px; height: 22px; padding: 4px; border-radius: 50%; background: var(--terra-ink); color: var(--cream); fill: none; stroke: currentColor; stroke-width: 2.4; transform: scale(0); transition: transform .5s var(--spring); }
-  .node.on .nck { transform: none; }
-  .tile { position: absolute; left: var(--x); top: var(--y); transform: translate(-50%, -50%); width: 29%; aspect-ratio: 1 / .92; display: grid; place-content: center; justify-items: center; gap: 6px; border-radius: var(--r-glass-sm); background: color-mix(in srgb, var(--surface) 45%, transparent); border: 1px solid var(--glass-rim); color: var(--ink-2); opacity: .6; transition: opacity .5s var(--ease), background-color .5s var(--ease), color .5s var(--ease), box-shadow .5s var(--ease), transform .7s var(--spring); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-  .tile svg { width: 28px; height: 28px; }
-  .tile span { font: 500 12.5px/1.2 var(--sans); text-align: center; }
-  .tile.on { opacity: 1; background: var(--glass-tint-strong); color: var(--terra-ink); transform: translate(-50%, -50%) scale(1.04); box-shadow: inset 0 1px 0 var(--glass-edge), var(--glass-shadow); }
-  .tile.on span { color: var(--ink); }
+  /* Status chips */
+  .okchip svg, .src svg { width: 15px; height: 15px; flex: none; color: var(--terra-ink); }
 
   /* Bots */
-  .d-bots .chat-body { min-height: 0; padding: 4px 0 0; gap: 8px; }
-  .d-bots .bub { font-size: 14.5px; padding: 9px 13px; max-width: 88%; }
-  .d-bots .typing { padding: 12px 14px; }
   .okchip { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 7px 12px; border-radius: var(--r-pill); font: 600 13.5px/1.2 var(--sans); background: var(--terra-tint); color: var(--terra-ink); }
 
   /* Agentes */
-  .am { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 9px 0; border-top: 1px solid var(--glass-rim); }
-  .am .aic { width: 30px; height: 30px; }
-  .am .tt { display: block; font: 600 14.5px/1.3 var(--sans); }
   .tt span { background: linear-gradient(currentColor, currentColor) no-repeat 0 58% / 0 1.5px; transition: background-size .5s var(--ease); }
   .tt.on { color: var(--ink-2); }
   .tt.on span { background-size: 100% 1.5px; }
-  .am .sub { font-size: 13px; }
   .st .dotspin { width: 16px; height: 16px; }
   .st .ok { display: none; width: 20px; height: 20px; color: var(--terra-ink); }
   .st.on .dotspin { display: none; }
   .st.on .ok { display: block; }
-  .resultchip { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; padding: 10px 12px; border-radius: var(--r-glass-sm); background: var(--terra-tint); color: var(--terra-ink); font: 600 14px/1.3 var(--sans); }
-  .rc-go { padding: 4px 10px; border-radius: var(--r-pill); background: var(--terra-ink); color: var(--cream); font-size: 13px; white-space: nowrap; }
 
-  /* IA para tu negocio */
-  .qbub { margin: 4px 0 12px auto; max-width: 88%; padding: 10px 14px; border-radius: 18px; border-bottom-right-radius: 6px; font-size: 14.5px; line-height: 1.4; background: var(--terra-ink); color: var(--cream); }
-  .ans { padding: 12px 14px; border-radius: var(--r-glass-sm); border: 1px solid var(--glass-rim); background: color-mix(in srgb, var(--surface) 70%, transparent); }
-  .ans .type { margin: 0 0 12px; min-height: 4.2em; font-size: 15px; line-height: 1.4; max-width: none; }
+  /* Source chip */
   .src { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: var(--r-pill); font: 500 13px/1.2 var(--sans); background: var(--terra-tint); color: var(--terra-ink); }
   .src svg { fill: none; stroke: currentColor; stroke-width: 1.7; color: var(--terra-ink); }
 
-  /* Diseño web */
-  .site { border-radius: var(--r-glass-sm); overflow: hidden; width: 86%; }
-  .site-bar { display: flex; align-items: center; gap: 5px; padding: 8px 12px; border-bottom: 1px solid var(--glass-rim); }
-  .site-bar i { width: 8px; height: 8px; border-radius: 50%; background: color-mix(in srgb, var(--ink) 22%, transparent); }
-  .site-bar .ex { margin-left: auto; }
-  .site-body { display: grid; gap: 10px; padding: 12px; }
-  .sk.nav { display: flex; align-items: center; gap: 8px; }
-  .sk.nav i { width: 30px; height: 10px; border-radius: 3px; background: var(--terra); }
-  .sk.nav span { width: 26px; height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--ink) 16%, transparent); }
-  .sk.nav span:first-of-type { margin-left: auto; }
-  .sk.hero { display: grid; gap: 7px; padding: 14px 12px; border-radius: 10px; background: var(--paper); }
-  .sk.hero .l1 { height: 12px; width: 70%; border-radius: 4px; background: color-mix(in srgb, var(--ink) 55%, transparent); }
-  .sk.hero .l2 { height: 7px; width: 48%; border-radius: 4px; background: color-mix(in srgb, var(--ink) 22%, transparent); }
-  .sk.hero .btnk { width: 54px; height: 16px; margin-top: 4px; border-radius: var(--r-control); background: var(--terra); }
-  .sk.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .sk.cards span { height: 44px; border-radius: 8px; background: var(--terra-tint); }
-  .sk.cards span:nth-child(2) { background: var(--paper); }
-  .phone-sk { position: absolute; right: 22px; bottom: 6px; width: 74px; display: grid; gap: 6px; padding: 14px 8px 10px; border-radius: 14px; background: var(--cream); border: 2px solid color-mix(in srgb, var(--ink) 80%, transparent); box-shadow: var(--glass-shadow); opacity: 0; transform: translateY(18px) scale(.94); transition: opacity .5s var(--ease), transform .8s var(--spring); }
-  .phone-sk.on { opacity: 1; transform: none; }
-  .phone-sk span { height: 20px; border-radius: 5px; background: var(--paper); }
-  .phone-sk span:nth-child(2) { background: var(--terra-tint); height: 28px; }
-  .phone-sk .pb { height: 12px; background: var(--terra); border-radius: var(--r-control); }
-
-
   /* =====================================================================
-     05 · Servicios page. Everything above is lifted from 04 (tokens, glass, nav, carousel, footer);
+     05 · Servicios page. Everything above is lifted from 04 (tokens, glass, nav, footer);
      below is only what this page adds: the page hero chips, the detail sections with their inline examples,
      the "También hacemos" tiles with animated glyphs and the process strip.
      ===================================================================== */
@@ -181,7 +62,7 @@
   .ex-note small { color: var(--ink-2); font-size: 14px; }
   .detail .go { display: inline-block; margin-top: 28px; font-weight: 600; color: var(--terra-ink); }
 
-  /* Inline example: the same liquid-glass card as the carousel, bigger, light palette in both themes */
+  /* Inline example: a liquid-glass card, light palette in both themes */
   .ex-card { grid-area: stage; align-self: start; position: sticky; top: 96px; min-width: 0; color: var(--ink); --b1: var(--terra); --b2: var(--terra-tint); --b3: var(--petrol); --blob-op: .5; --frost: 48%; padding: clamp(14px, 2.2vw, 26px); border-radius: calc(var(--r-glass) + 8px); box-shadow: 0 40px 70px -50px rgba(30, 42, 47, .45); }
   /* the base stylesheet pads every <section>; the panels inside the examples are not page sections */
   .ex-card section { padding: 0; }
@@ -280,7 +161,6 @@
     .js .hero-copy .chips-wrap { opacity: 1; transform: none; }
     .glyph *, .glyph { animation: none; }
   }
-
 
 /* Liquid fields bleed past their sections; clip them so the page never scrolls sideways */
 main { overflow-x: clip; }

@@ -157,41 +157,15 @@ test('the hero keeps the live dotted bridge and only gains the glass copy treatm
   assert.match(dots, /assets\/hero-puente-v2\.jpg/);
 });
 
-test('the carousel module is shared and only the page with a track wires it', () => {
-  assert.ok(existsSync(new URL('../src/carousel.mjs', import.meta.url)));
-  const js = readFileSync(new URL('../src/carousel.mjs', import.meta.url), 'utf8');
-  assert.match(js, /prefers-reduced-motion: reduce/);
-  assert.doesNotMatch(js, /setInterval/);
-  // wherever a track is published, the stylesheet that ships with it owns the scroll-snap
-  const tracks = PAGES.filter(page => read(page.out).includes('class="svc-track'));
-  for (const page of tracks) {
-    const cssFiles = [...read(page.out).matchAll(/href="[^"]*styles\/([^"]+)"/g)].map(m => m[1]);
-    assert.ok(cssFiles.some(file => read(`styles/${file}`).includes('.svc-track')), `${page.out} needs the carousel stylesheet`);
-  }
-});
-
 test('the Services page starts from business problems and demonstrates the result', () => {
   const hub = readFileSync(new URL('../servicios/index.html', import.meta.url), 'utf8');
   const chooser = hub.match(/<nav aria-label="Ir a un problema">[\s\S]*?<\/nav>/)?.[0] ?? '';
   assert.match(chooser, /href="#software">Tengo todo en planillas/);
   assert.match(chooser, /href="#automatizaciones">Cargo el mismo dato varias veces/);
   assert.match(chooser, /href="#ia">No sé si la IA me sirve/);
-  assert.ok(hub.indexOf('id="carrusel"') < hub.indexOf('id="tres"'));
-  assert.match(hub, /<h3>Mis pedidos y stock están en planillas<\/h3>/);
-  assert.match(hub, /<h3>Cargo el mismo dato varias veces<\/h3>/);
 });
 
-test('every service card on the hub shows a described example and links to its detail', () => {
-  const hub = readFileSync(new URL('../servicios/index.html', import.meta.url), 'utf8');
-  const cards = hub.match(/<li class="svc-card[\s\S]*?<\/li>\s*(?=<li class="svc-card|<\/ul>)/g) ?? [];
-  assert.equal(cards.length, 7);
-  for (const card of cards) {
-    assert.match(card, /<h3>[^<]+<\/h3>/);
-    assert.match(card, /role="img" aria-label="Ejemplo ilustrativo: [^"]+"/);
-    const target = card.match(/class="link" href="#([a-z]+)"/)?.[1];
-    assert.ok(target && hub.includes(`id="${target}"`), `card links to a missing #${target}`);
-  }
-  // service photos, wherever a page still shows one, keep their dimensions and description
+test('service photos, wherever a page still shows one, keep their dimensions and description', () => {
   for (const page of PAGES) {
     for (const tag of read(page.out).match(/<img[^>]*assets\/servicios\/[^>]*>/g) ?? []) {
       assert.match(tag, /width="720"/);
@@ -201,6 +175,15 @@ test('every service card on the hub shows a described example and links to its d
   }
 });
 
+test('the Services page has no carousel and its problem chips lead to the details', () => {
+  const hub = readFileSync(new URL('../servicios/index.html', import.meta.url), 'utf8');
+  assert.doesNotMatch(hub, /id="carrusel"|class="svc-track|class="svc-card|Mirá lo que cambia/);
+  assert.ok(!existsSync(new URL('../src/carousel.mjs', import.meta.url)));
+  assert.doesNotMatch(readFileSync(new URL('../src/servicios.mjs', import.meta.url), 'utf8'), /carousel|svc-card/);
+  assert.doesNotMatch(readFileSync(new URL('../styles/servicios.css', import.meta.url), 'utf8'), /\.svc-(track|card|arrow|prog|ctl)\b/);
+  // the hero goes straight to the detail sections
+  assert.ok(hub.indexOf('</header>') < hub.indexOf('id="tres"'));
+});
 test('in the contact form only the person name is required, the business name is optional', () => {
   const form = readFileSync(new URL('../contacto/index.html', import.meta.url), 'utf8');
   assert.match(form, /<input id="name" name="name"[^>]*\brequired\b/);
@@ -348,13 +331,3 @@ test('the process bridge stacks before its columns get too narrow for the step t
   assert.match(css, /\.pier \.takeaway \{[^}]*margin-top: auto/);
 });
 
-test('every carousel example starts at the same height in its card', () => {
-  const css = readFileSync(new URL('../styles/servicios.css', import.meta.url), 'utf8');
-  // examples anchor to the top of their area instead of centering by their own height
-  assert.match(css, /\n  \.demo \{[^}]*align-content: start;/);
-  assert.doesNotMatch(css, /\.d-web \{ align-content: center; \}/);
-  // one-line titles reserve two lines so their example does not rise
-  assert.match(css, /\.svc-card h3 \{[^}]*min-height: 2\.2em/);
-  // diagrams carry inner air around their nodes; the carousel compensates it
-  assert.match(css, /\.svc-card \.flow, \.svc-card \.tiles-int \{ margin-top: -27px; \}/);
-});

@@ -30,7 +30,7 @@
     unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
   }
   /* Illustrations keep the light palette in dark mode, like the photos */
-  :root, .figure, .svc-card, .svc-arrow, .app-stage, .liquid-tile, .ex-card {
+  :root, .figure, .app-stage, .liquid-tile, .ex-card {
     color-scheme: light;
     /* Brand kit https://…/Manual_Identidad.md (v2.0 Puente Cauce): Marfil, Blanco, Carbón, Naranja Cauce.
        Naranja Cauce is fills and graphics only (3.2:1 on white); text uses the derived --terra-ink. */

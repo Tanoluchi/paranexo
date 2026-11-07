@@ -1,7 +1,6 @@
-// Servicios page: the carousel and the declarative examples inside its cards and the detail sections.
+// Servicios page: the declarative examples inside the detail sections.
 // Markup says what happens and when: data-t adds .on, data-off removes it, data-count ticks a number,
 // data-swap slides a sub-status, data-type types a line.
-import { initCarousel } from './carousel.mjs';
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -16,7 +15,7 @@ const slide = (el, text) => {
 };
 
 export function initServiceDemos() {
-  const demos = $$('.svc-card .demo, .ex-card .demo');
+  const demos = $$('.ex-card .demo');
   if (!demos.length) return;
   const state = new Map();
   demos.forEach(dem => {
@@ -70,12 +69,11 @@ export function initServiceDemos() {
     at(info.len, () => { info.busy = false; });
   };
 
-  initCarousel();
-  if (reduce) { demos.forEach(d => { final(state.get(d)); d.closest('.svc-card, .ex-card')?.classList.remove('off'); }); return; }
+  if (reduce) { demos.forEach(d => { final(state.get(d)); d.closest('.ex-card')?.classList.remove('off'); }); return; }
   demos.forEach(d => reset(state.get(d)));
   let order = 0;
   const io = new IntersectionObserver(es => es.forEach(e => {
-    const card = e.target.closest('.svc-card, .ex-card');
+    const card = e.target.closest('.ex-card');
     card?.classList.toggle('off', !e.isIntersecting);
     if (e.isIntersecting) play(e.target, (order++ % 4) * 160);
     else clear(state.get(e.target));

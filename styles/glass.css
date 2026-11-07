@@ -4,7 +4,7 @@
      page layout stays in landing.css / apps.css / servicios.css.
      --r-glass is the one rounded material; printed surfaces stay square.
      ===================================================================== */
-  :root, .app-stage, .liquid-tile, .svc-card, .ex-card {
+  :root, .app-stage, .liquid-tile, .ex-card {
     --glass-tint: color-mix(in srgb, var(--surface) 66%, transparent);
     --glass-tint-strong: color-mix(in srgb, var(--surface) 84%, transparent);
     --glass-sheen: color-mix(in srgb, var(--surface) 70%, transparent);
