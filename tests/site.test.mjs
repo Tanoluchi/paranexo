@@ -335,3 +335,13 @@ test('secondary service tiles start their titles on one line and keep their link
   assert.match(css, /\.st-text \{ display: flex; flex-direction: column; align-items: flex-start; \}/);
   assert.match(css, /\.st-text \.link \{[^}]*margin-top: auto;/);
 });
+
+test('pages preload only the fonts they use and the retired fonts are gone', () => {
+  for (const page of PAGES) {
+    const preloads = read(page.out).match(/<link rel="preload"[^>]*as="font"[^>]*>/g) ?? [];
+    assert.deepEqual(preloads.map(tag => tag.match(/fonts\/([^"]+)"/)[1]).sort(), ['bricolage-grotesque-latin.woff2', 'dm-sans-latin.woff2'], page.out);
+  }
+  for (const file of ['archivo.woff2', 'instrument-serif.woff2', 'OFL-archivo.txt', 'OFL-instrument-serif.txt', 'OFL-fraunces.txt']) {
+    assert.ok(!existsSync(new URL(`../assets/fonts/${file}`, import.meta.url)), file);
+  }
+});
