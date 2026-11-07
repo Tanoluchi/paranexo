@@ -229,6 +229,7 @@ Warm and tactile on a firm base.
 ### Navigation
 - **Style:** sticky; at the top a translucent Papel bar, after scrolling a floating glass pill (60px tall, pill radius, blur).
 - **Logo:** the Puente Cauce horizontal logo file (216px), color on light, color-dark in dark mode.
+- **Tab icon:** the kit's `assets/brand/favicon.svg` (orange bridge on Marfil) on every page.
 - **Links:** 15px Carbón Suave; current page in Carbón 600 with a 2px Naranja Cauce underline offset 8px.
 - **Actions:** circular theme toggle, primary "Hablemos" button; under 900px a circular menu toggle opens a glass dropdown.
 
@@ -237,6 +238,9 @@ A glass stage that tells one short, labelled story ("Ejemplo: distribuidora de b
 
 ### Page hero (shared)
 Servicios, Cómo trabajamos and Quiénes somos open with the same hero: a centered mono eyebrow, a Bricolage display title (`clamp(42px, 6.2vw, 92px)`, at most 20ch), a lead in Carbón (max 52ch) and the two CTAs inside a glass cluster, over a quiet liquid field (`--blob-op: .3`). A radial Papel veil behind the copy (90% Papel fading out) keeps the lead at AA while the field moves around it, in both themes. The rules live in `styles/pages.css` under `.hero.page-hero`.
+
+### 404 page
+Unknown URLs answer with `404.html` and a 404 status: the shared page hero with "Error 404", "Esta página no existe", "Ir al inicio" and "Escribinos", plus glass chips to Servicios, Cómo trabajamos, Quiénes somos and Preguntas frecuentes. It links from the site root so it works at any depth, carries `noindex` instead of a canonical URL and stays out of the sitemap.
 
 ### Service detail (Servicios)
 The three main services (Software a medida, Automatizaciones, IA para pymes) each get a detail block: title, lead, "Qué incluye" checklist and "Cómo lo resolvemos" beside a sticky glass example that plays once and offers "Ver de nuevo". These blocks are the only place the services are explained; the former per-service pages now redirect to them (`servicios/#software`, `#automatizaciones`, `#ia`).

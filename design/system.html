@@ -1,173 +1,305 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-AR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Puente NEA · Sistema de diseño</title>
+<title>Sistema de diseño · Paranexo</title>
 <style>
+  /* Project fonts and logo are loaded from the repo by relative path (no external URL). */
+  @font-face { font-family: "Bricolage Grotesque"; font-weight: 200 800; font-display: swap; src: url("../assets/fonts/bricolage-grotesque-latin.woff2") format("woff2"); }
+  @font-face { font-family: "DM Sans"; font-weight: 100 1000; font-display: swap; src: url("../assets/fonts/dm-sans-latin.woff2") format("woff2"); }
   :root {
-    --cream: #FCF8EF; --paper: #F5EDDE; --line: #E6D9C3; --ink: #1E2A2F; --ink-2: #4A5459;
-    --terra: #D9572B; --terra-ink: #A23C16; --river: #A8CFE3; --river-ink: #2B6684; --petrol: #274B57;
-    --surface: #FFFFFF; --terra-tint: #FBE6DA; --river-tint: #E2EFF6;
-    --serif: ui-serif, "New York", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --cream: #FCFBF8; --marfil: #FAF4E8; --surface: #FFFFFF; --ink: #20211F; --terra: #EF633C;
+    --paper: var(--marfil); --line: #E5D9C4; --ink-2: #4E4D48; --terra-ink: #B5401C; --terra-tint: #FCE3D8;
+    --petrol: #20211F; --on-petrol: #FAF4E8; --on-petrol-2: #E6DECC; --terra-on-petrol: #F6A184;
+    --river: #A8CFE3; --river-ink: #2B6684; --river-tint: #E2EFF6;
+    --serif: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+    --sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
     --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-    --ease: cubic-bezier(.22,.8,.26,1);
+    --r-surface: 0; --r-control: 3px; --r-pill: 999px; --r-glass: 20px; --r-glass-sm: 14px;
+    --ease: cubic-bezier(.22,.8,.26,1); --spring: cubic-bezier(.3, 1.35, .45, 1);
+    --glass-tint: color-mix(in srgb, var(--surface) 66%, transparent);
+    --glass-tint-strong: color-mix(in srgb, var(--surface) 84%, transparent);
+    --glass-edge: rgba(255,255,255,.85);
+    --glass-rim: color-mix(in srgb, var(--line) 80%, transparent);
+    --glass-shadow: 0 22px 44px -26px rgba(32,33,31,.42), 0 2px 8px -2px rgba(32,33,31,.08);
+    --glass-blur: blur(18px) saturate(1.6);
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--cream); color: var(--ink); font: 17px/1.6 var(--sans); }
-  :focus-visible { outline: 3px solid var(--terra); outline-offset: 3px; border-radius: 6px; }
-  .wrap { width: min(1200px, 100% - 48px); margin-inline: auto; }
-  h1, h2, h3 { font-family: var(--serif); font-weight: 500; letter-spacing: -.02em; margin: 0; }
-  h1 { font-size: clamp(44px, 6vw, 72px); line-height: .98; }
-  h2 { font-size: 32px; line-height: 1.1; margin-bottom: 8px; }
+  body { margin: 0; background: var(--cream); color: var(--ink); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+  :focus-visible { outline: 3px solid var(--terra); outline-offset: 3px; border-radius: var(--r-control); }
+  main { width: min(1312px, 100% - 64px); margin: 0 auto; padding: 56px 0 96px; }
+  header.top { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+  header.top img { display: block; width: 260px; height: auto; }
+  header.top p { margin: 0; max-width: 52ch; color: var(--ink-2); font-size: 15px; }
   .eyebrow { font: 500 14px/1.2 var(--mono); color: var(--terra-ink); }
-  .lead { color: var(--ink-2); font-size: 19px; max-width: 56ch; margin: 16px 0 0; }
-  header { padding: 64px 0 40px; }
-  section { padding: 40px 0; border-top: 1px solid var(--line); }
-  .src { font: 500 13px var(--mono); color: var(--ink-2); margin: 0 0 24px; }
-  .grid { display: grid; gap: 16px; }
-  .sw { grid-template-columns: repeat(auto-fill, minmax(176px, 1fr)); }
-  .chip { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); }
-  .chip i { display: block; height: 64px; border-bottom: 1px solid var(--line); }
-  .chip div { padding: 12px 16px; font-size: 14px; }
-  .chip b { display: block; font: 600 13px var(--mono); }
-  .chip span { color: var(--ink-2); font: 500 12px var(--mono); }
-  .on-petrol { background: var(--petrol); border-radius: 20px; padding: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(176px, 1fr)); gap: 16px; }
-  .on-petrol span { font: 500 13px var(--mono); }
-  .type-row { display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid var(--line); }
-  .type-row small { font: 500 13px var(--mono); color: var(--ink-2); }
-  .space { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; }
-  .space div { text-align: center; font: 500 12px var(--mono); color: var(--ink-2); }
-  .space i { display: block; background: var(--terra); margin: 0 auto 8px; width: 24px; opacity: .85; }
-  .radii { display: flex; flex-wrap: wrap; gap: 24px; }
-  .radii div { text-align: center; font: 500 12px var(--mono); color: var(--ink-2); }
-  .radii i { display: block; width: 88px; height: 64px; background: var(--paper); border: 1.5px solid var(--ink); margin-bottom: 8px; }
-  .shadows { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
-  .shadows div { background: var(--cream); border: 1px solid var(--line); border-radius: 20px; padding: 24px; min-height: 120px; font: 500 12px/1.5 var(--mono); color: var(--ink-2); }
-  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 10px; font: 600 16px var(--sans); text-decoration: none; border: 1.5px solid var(--ink); cursor: pointer; transition: transform .15s var(--ease), background-color .2s var(--ease), border-color .2s var(--ease); }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 400; letter-spacing: -.005em; margin: 0; }
+  h1 { font-size: 64px; line-height: 1; margin-top: 10px; }
+  section { padding: 56px 0 8px; }
+  section > h2 { font-size: 44px; line-height: 1.05; margin: 8px 0 24px; }
+  .note { margin: 0 0 20px; color: var(--ink-2); font-size: 15px; max-width: 70ch; }
+  code { font: 500 13px var(--mono); }
+
+  /* swatches */
+  .sw-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+  .sw { border: 1px solid var(--line); background: var(--surface); }
+  .sw i { display: block; height: 96px; border-bottom: 1px solid var(--line); }
+  .sw div { padding: 10px 12px 12px; }
+  .sw b { display: block; font-size: 14px; }
+  .sw code { display: block; color: var(--ink-2); }
+  .sw small { display: block; margin-top: 4px; font-size: 12.5px; color: var(--ink-2); line-height: 1.4; }
+  .sub { margin: 28px 0 12px; font: 500 13px var(--mono); color: var(--ink-2); }
+  .dark-row { display: flex; gap: 0; border: 1px solid var(--line); }
+  .dark-row span { flex: 1; height: 64px; display: flex; align-items: flex-end; padding: 8px 10px; font: 500 12px var(--mono); }
+
+  /* type */
+  .type { display: grid; gap: 0; border-top: 1px solid var(--line); }
+  .type > div { display: grid; grid-template-columns: 260px 1fr; gap: 32px; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .type dt { font: 500 13px/1.5 var(--mono); color: var(--ink-2); }
+  .t-display { font: 400 80px/1.02 var(--serif); }
+  .t-h2 { font: 400 54px/1.1 var(--serif); }
+  .t-quote { font: 400 23px/1.25 var(--serif); }
+  .t-kpi { font: 400 44px/1.1 var(--serif); font-variant-numeric: tabular-nums; }
+  .t-lead { font-size: 19px; color: var(--ink-2); max-width: 56ch; }
+  .t-body { font-size: 17px; line-height: 1.6; max-width: 62ch; }
+  .t-label { font: 500 14px var(--mono); color: var(--terra-ink); }
+  .t-legal { font: 500 12px var(--mono); color: var(--ink-2); }
+  .t-h2 em { font-style: normal; color: var(--terra-ink); }
+
+  /* spacing, radius, shadow */
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; align-items: start; }
+  .spc { display: grid; gap: 10px; }
+  .spc div { display: flex; align-items: center; gap: 14px; font: 500 13px var(--mono); color: var(--ink-2); }
+  .spc i { display: block; height: 14px; background: var(--terra-tint); border: 1px solid var(--terra-ink); }
+  .rad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .rad div { display: grid; gap: 8px; font: 500 12.5px var(--mono); color: var(--ink-2); }
+  .rad i { display: block; height: 72px; background: var(--paper); border: 1.5px solid var(--ink); }
+  .shd { display: grid; gap: 22px; }
+  .shd div { padding: 18px; background: var(--surface); font: 500 12.5px/1.5 var(--mono); color: var(--ink-2); }
+
+  /* components */
+  .comp { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .card-c { border: 1px solid var(--line); background: var(--surface); padding: 28px; }
+  .card-c > .eyebrow { display: block; margin-bottom: 18px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: var(--r-control); font: 600 16px var(--sans); text-decoration: none; border: 1.5px solid var(--ink); cursor: pointer; transition: transform .15s var(--ease), background-color .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease); }
   .btn:active { transform: scale(.98); }
   .btn-primary { background: var(--ink); color: var(--cream); }
   .btn-primary:hover { background: var(--terra-ink); border-color: var(--terra-ink); }
   .btn-ghost { background: transparent; color: var(--ink); }
+  .btn-ghost:hover { color: var(--terra-ink); border-color: var(--terra-ink); }
+  .btn .arrow { transition: transform .2s var(--ease); }
+  .btn:hover .arrow { transform: translateX(4px); }
   .mini { min-height: 44px; padding: 8px 16px; font-size: 14px; }
+  .btns { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
   .round { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
   .round:hover { border-color: var(--ink); }
   .round svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-  .comps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; align-items: start; }
-  .comp-title { font: 500 13px var(--mono); color: var(--ink-2); margin: 0 0 12px; }
-  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 24px; }
-  .card h3 { font-size: 24px; line-height: 1.15; margin-bottom: 8px; }
-  .card p { margin: 0; color: var(--ink-2); font-size: 15px; }
-  .tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; }
-  .tags li { border: 1px solid var(--line); background: var(--cream); padding: 6px 12px; border-radius: 8px; font-size: 14px; }
-  .pill { display: inline-block; font: 500 13px var(--mono); color: var(--terra-ink); background: var(--terra-tint); padding: 4px 8px; border-radius: 6px; }
-  .tile { width: 76px; height: 76px; border-radius: 20px; display: grid; place-items: center; background: var(--terra-tint); }
-  .tile.cool { background: var(--river-tint); }
-  .tile svg { width: 38px; height: 38px; fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-  .band { background: var(--petrol); color: #fff; border-radius: 20px; padding: 24px; }
-  .band p { margin: 0 0 16px; font: 500 24px/1.2 var(--serif); }
-  .band .btn { background: var(--terra-ink); border-color: var(--terra-ink); color: var(--cream); }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-  @media (max-width: 900px) { .comps, .shadows { grid-template-columns: 1fr; } .type-row { grid-template-columns: 1fr; gap: 4px; } }
+  .field { display: block; margin-bottom: 16px; }
+  .field span { display: block; font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .field input { width: 100%; background: var(--cream); border: 1.5px solid var(--line); border-radius: var(--r-control); padding: 13px 15px; font: inherit; color: var(--ink); }
+  .field input:focus { outline: 3px solid rgba(181,64,28,.35); border-color: var(--terra-ink); }
+  .field input[aria-invalid="true"] { border-color: var(--terra-ink); background: var(--terra-tint); }
+  .field .err { display: block; margin-top: 5px; color: var(--terra-ink); font-size: 13.5px; font-weight: 700; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--cream); padding: 9px 16px; font: 650 14.5px var(--sans); color: var(--ink); cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--terra-tint); border-color: var(--terra-ink); color: var(--terra-ink); }
+  .problem { border: 1px solid var(--line); padding: 28px 24px; background: var(--surface); transition: translate .3s var(--ease); }
+  .problem:hover { translate: 0 -4px; }
+  .problem .n { font: 600 13px var(--mono); color: var(--terra-ink); }
+  .problem .q { font: 400 23px/1.25 var(--serif); margin: 10px 0 12px; }
+  .problem .a { font-size: 15px; color: var(--ink-2); margin: 0; }
+
+  /* glass */
+  .liquid { position: relative; isolation: isolate; overflow: hidden; border-radius: var(--r-glass); background: var(--paper); padding: 32px; min-height: 300px; }
+  .blobs { position: absolute; inset: 0; z-index: -2; pointer-events: none; }
+  .blobs i { position: absolute; width: 62%; aspect-ratio: 1; border-radius: 50% 50% 45% 55% / 55% 45% 55% 45%; filter: blur(34px); opacity: .85; animation: ooze 18s ease-in-out infinite alternate; }
+  .blobs i:nth-child(1) { left: -12%; top: -34%; background: var(--terra-tint); }
+  .blobs i:nth-child(2) { right: -14%; top: 6%; width: 54%; background: var(--terra); opacity: .5; animation-duration: 23s; animation-delay: -7s; }
+  .blobs i:nth-child(3) { left: 26%; bottom: -46%; background: var(--paper); animation-duration: 29s; animation-delay: -13s; }
+  @keyframes ooze { 50% { transform: translate(9%, 10%) rotate(42deg) scale(1.14); border-radius: 38% 62% 55% 45% / 48% 58% 42% 52%; } 100% { transform: translate(-7%, 4%) rotate(-26deg) scale(.94); border-radius: 58% 42% 40% 60% / 60% 40% 60% 40%; } }
+  .glass { position: relative; isolation: isolate; background: var(--glass-tint-strong); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-rim); border-radius: var(--r-glass); box-shadow: inset 0 1px 0 var(--glass-edge), var(--glass-shadow); }
+  .gstack { display: grid; gap: 14px; max-width: 460px; }
+  .pill { justify-self: center; display: inline-flex; align-items: center; gap: 9px; padding: 9px 18px 9px 14px; border-radius: var(--r-pill); font: 600 14.5px/1.2 var(--sans); }
+  .dotspin { width: 18px; height: 18px; color: var(--terra-ink); animation: tick 1s steps(8) infinite; }
+  @keyframes tick { to { transform: rotate(360deg); } }
+  .res { padding: 18px 20px 20px; display: grid; gap: 12px; }
+  .res b.t { font: 400 27px/1.1 var(--serif); }
+  .tbl { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--glass-rim); border-radius: var(--r-glass-sm); overflow: hidden; background: color-mix(in srgb, var(--surface) 60%, transparent); }
+  .tbl span { padding: 10px 14px; font: 600 15px/1.3 var(--sans); }
+  .tbl .th { font: 500 12.5px/1.3 var(--sans); color: var(--ink-2); border-bottom: 1px solid var(--glass-rim); background: color-mix(in srgb, var(--ink) 4%, transparent); }
+  .tbl span:not(:nth-child(3n+1)) { border-left: 1px solid var(--glass-rim); }
+  .navpill { display: flex; align-items: center; gap: 24px; height: 60px; padding: 0 10px 0 20px; border-radius: var(--r-pill); font-size: 15px; }
+  .navpill img { width: 150px; height: auto; margin-right: auto; }
+  .navpill a { color: var(--ink-2); text-decoration: none; white-space: nowrap; }
+  .navpill a:hover { color: var(--ink); }
+  .navpill a[aria-current="page"] { color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--terra); text-decoration-thickness: 2px; text-underline-offset: 8px; }
+  .navpill .btn { padding: 10px 16px; font-size: 15px; color: var(--cream); }
+
+  /* footer row */
+  .contact { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .mail { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 5px 16px 5px 5px; border-radius: var(--r-pill); border: 1px solid var(--line); background: var(--surface); color: var(--ink); text-decoration: none; font: 600 15px var(--sans); }
+  .mail:hover { border-color: var(--terra-ink); color: var(--terra-ink); }
+  .mail .ic { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--terra-tint); color: var(--terra-ink); }
+  .mail svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .band { background: var(--petrol); color: var(--on-petrol-2); padding: 28px; }
+  .band .eyebrow { color: var(--terra-on-petrol); }
+  .band h3 { color: var(--on-petrol); font-size: 34px; margin: 8px 0 6px; }
+  .band p { margin: 0; font-size: 15px; }
+
+  /* The board is built for 1440; below that it reflows instead of scrolling sideways */
+  @media (max-width: 1100px) {
+    main { width: min(100% - 40px, 1312px); }
+    header.top { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .sw-grid { grid-template-columns: repeat(3, 1fr); }
+    .type > div { grid-template-columns: 1fr; gap: 8px; }
+    .t-display { font-size: clamp(38px, 11vw, 80px); }
+    .t-h2 { font-size: clamp(30px, 8vw, 54px); }
+    .row3 { grid-template-columns: 1fr; }
+    .rad { grid-template-columns: repeat(2, 1fr); }
+    .comp { grid-template-columns: 1fr; }
+    .dark-row { flex-wrap: wrap; }
+    .dark-row span { flex: 1 1 45%; }
+    .navpill { flex-wrap: wrap; height: auto; padding: 12px 16px; gap: 12px; }
+    .navpill img { width: 132px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .blobs i, .dotspin { animation: none; } .btn, .problem { transition: none; } }
 </style>
 </head>
 <body>
-<header class="wrap">
-  <span class="eyebrow">Sistema de diseño · sincronizado desde el proyecto</span>
-  <h1>Puente NEA</h1>
-  <p class="lead">Fuentes leídas: <code>styles/landing.css</code>, <code>styles/figures/software.css</code>, <code>styles/figures/auto.css</code>, <code>index.html</code>. Detalle y orígenes en <code>design/system.md</code>.</p>
-</header>
+<main>
+  <header class="top">
+    <div>
+      <span class="eyebrow">Sistema de diseño · sincronizado el 6/11/2026</span>
+      <h1>Paranexo · Puente Cauce</h1>
+    </div>
+    <div>
+      <img src="../assets/brand/logo-horizontal-color.svg" width="1080" height="227" alt="Paranexo">
+      <p>Valores tomados de <code>styles/landing.css</code>, <code>glass.css</code>, <code>apps.css</code>, <code>servicios.css</code> y <code>contact.css</code>. Detalle en <code>design/system.md</code> y <code>DESIGN.md</code>.</p>
+    </div>
+  </header>
 
-<main class="wrap">
   <section aria-labelledby="c-title">
+    <span class="eyebrow">01</span>
     <h2 id="c-title">Colores</h2>
-    <p class="src">styles/landing.css · :root (claro)</p>
-    <div class="grid sw">
-      <div class="chip"><i style="background:var(--cream)"></i><div><b>--cream</b><span>#FCF8EF · fondo</span></div></div>
-      <div class="chip"><i style="background:var(--paper)"></i><div><b>--paper</b><span>#F5EDDE · sección alterna</span></div></div>
-      <div class="chip"><i style="background:var(--surface)"></i><div><b>--surface</b><span>#FFFFFF · tarjetas</span></div></div>
-      <div class="chip"><i style="background:var(--line)"></i><div><b>--line</b><span>#E6D9C3 · bordes</span></div></div>
-      <div class="chip"><i style="background:var(--ink)"></i><div><b>--ink</b><span>#1E2A2F · texto</span></div></div>
-      <div class="chip"><i style="background:var(--ink-2)"></i><div><b>--ink-2</b><span>#4A5459 · texto 2</span></div></div>
-      <div class="chip"><i style="background:var(--terra)"></i><div><b>--terra</b><span>#D9572B · foco, bordes</span></div></div>
-      <div class="chip"><i style="background:var(--terra-ink)"></i><div><b>--terra-ink</b><span>#A23C16 · acento texto</span></div></div>
-      <div class="chip"><i style="background:var(--terra-tint)"></i><div><b>--terra-tint</b><span>#FBE6DA · relleno cálido</span></div></div>
-      <div class="chip"><i style="background:var(--river)"></i><div><b>--river</b><span>#A8CFE3</span></div></div>
-      <div class="chip"><i style="background:var(--river-ink)"></i><div><b>--river-ink</b><span>#2B6684 · acento frío</span></div></div>
-      <div class="chip"><i style="background:var(--river-tint)"></i><div><b>--river-tint</b><span>#E2EFF6 · relleno frío</span></div></div>
-      <div class="chip"><i style="background:var(--petrol)"></i><div><b>--petrol</b><span>#274B57 · bandas oscuras</span></div></div>
+    <p class="note">Blanco papel como base, Marfil en paneles puntuales, Carbón como tinta y el Naranja Cauce como única luz. El naranja puro es relleno y gráfico; el texto naranja usa el tono derivado.</p>
+    <div class="sw-grid">
+      <div class="sw"><i style="background:#EF633C"></i><div><b>Naranja Cauce</b><code>--terra #EF633C</code><small>Logo, foco, rellenos. Nunca texto chico.</small></div></div>
+      <div class="sw"><i style="background:#B5401C"></i><div><b>Naranja texto</b><code>--terra-ink #B5401C</code><small>Links, eyebrows, hover, errores. 5.2:1</small></div></div>
+      <div class="sw"><i style="background:#FCE3D8"></i><div><b>Naranja tinte</b><code>--terra-tint #FCE3D8</code><small>Íconos, chips elegidos, estados.</small></div></div>
+      <div class="sw"><i style="background:#20211F"></i><div><b>Carbón</b><code>--ink #20211F</code><small>Texto, títulos, botón principal, bandas.</small></div></div>
+      <div class="sw"><i style="background:#4E4D48"></i><div><b>Carbón suave</b><code>--ink-2 #4E4D48</code><small>Texto secundario y leads. 7.7:1</small></div></div>
+      <div class="sw"><i style="background:#FCFBF8"></i><div><b>Papel</b><code>--cream #FCFBF8</code><small>Fondo de página; texto sobre rellenos.</small></div></div>
+      <div class="sw"><i style="background:#FAF4E8"></i><div><b>Marfil</b><code>--marfil #FAF4E8 · --paper</code><small>Secciones alternas, base del vidrio.</small></div></div>
+      <div class="sw"><i style="background:#E5D9C4"></i><div><b>Línea cálida</b><code>--line #E5D9C4</code><small>Bordes, divisores, campos.</small></div></div>
+      <div class="sw"><i style="background:#FFFFFF"></i><div><b>Blanco</b><code>--surface #FFFFFF</code><small>Tarjetas y base del vidrio.</small></div></div>
+      <div class="sw"><i style="background:#A8CFE3"></i><div><b>Río</b><code>--river #A8CFE3</code><small>Solo en ilustraciones y datos.</small></div></div>
+      <div class="sw"><i style="background:#2B6684"></i><div><b>Río tinta</b><code>--river-ink #2B6684</code><small>Solo en ilustraciones y datos.</small></div></div>
+      <div class="sw"><i style="background:#E2EFF6"></i><div><b>Río tinte</b><code>--river-tint #E2EFF6</code><small>Solo en ilustraciones y datos.</small></div></div>
     </div>
-    <p class="src" style="margin-top:32px">Literales sobre petrol (landing.css, no son tokens)</p>
-    <div class="on-petrol">
-      <span style="color:#fff">#FFFFFF · títulos</span><span style="color:#EAF1F2">#EAF1F2 · cuerpo</span><span style="color:#D5E2E5">#D5E2E5 · rol, enlaces</span><span style="color:#C4D4D8">#C4D4D8 · secundario</span><span style="color:#F4A47F">#F4A47F · acento</span><span style="color:#F08A3A">#F08A3A · sol del isotipo</span><span style="color:#E8642F">#E8642F · tablero del isotipo</span>
+    <p class="sub">Modo oscuro (data-theme="dark")</p>
+    <div class="dark-row">
+      <span style="background:#1A1B18;color:#FAF4E8">--cream #1A1B18</span>
+      <span style="background:#20211F;color:#FAF4E8">--paper #20211F</span>
+      <span style="background:#212220;color:#FAF4E8">--surface #212220</span>
+      <span style="background:#37382F;color:#FAF4E8">--line #37382F</span>
+      <span style="background:#FAF4E8;color:#20211F">--ink #FAF4E8</span>
+      <span style="background:#C8C1B2;color:#20211F">--ink-2 #C8C1B2</span>
+      <span style="background:#F79A78;color:#20211F">--terra-ink #F79A78</span>
+      <span style="background:#38231A;color:#FAF4E8">--terra-tint #38231A</span>
     </div>
-    <p class="src" style="margin-top:24px">Modo oscuro: :root[data-theme="dark"] sobrescribe 12 tokens (ver system.md). Las ilustraciones conservan la paleta clara.</p>
   </section>
 
   <section aria-labelledby="t-title">
+    <span class="eyebrow">02</span>
     <h2 id="t-title">Tipografía</h2>
-    <p class="src">styles/landing.css · --serif, --sans, --mono</p>
-    <div class="type-row"><small>h1 · serif 500 · clamp(44, 6vw, 84)</small><div style="font:500 64px/.98 var(--serif);letter-spacing:-.02em">Software a medida</div></div>
-    <div class="type-row"><small>h2 · serif 500 · clamp(36, 4.4vw, 56)</small><div style="font:500 48px/1.05 var(--serif);letter-spacing:-.02em">Tres formas de sacarte trabajo</div></div>
-    <div class="type-row"><small>h3 · serif 500 · 40 / 30 / 24</small><div style="font:500 30px/1.1 var(--serif);letter-spacing:-.02em">Entendemos tu día a día</div></div>
-    <div class="type-row"><small>lead · sans 19</small><div style="font-size:19px;color:var(--ink-2)">Dejá el Excel, los mensajes repetidos y la carga doble.</div></div>
-    <div class="type-row"><small>cuerpo · sans 17 / 15</small><div>Construimos el sistema que tu negocio necesita y te acompañamos a usarlo.</div></div>
-    <div class="type-row"><small>eyebrow · mono 500 14</small><div class="eyebrow">Qué hacemos</div></div>
-    <div class="type-row"><small>meta · mono 600 13 / 12</small><div style="font:600 13px var(--mono);color:var(--ink-2)">Ejemplo ilustrativo</div></div>
+    <dl class="type">
+      <div><dt>Display · Bricolage Grotesque 400<br>clamp(42px, 5.6vw, 80px) / 1.02</dt><dd class="t-display" style="margin:0">Conectamos tus ideas</dd></div>
+      <div><dt>Título de sección · 54px / 1.1<br>énfasis solo con color</dt><dd class="t-h2" style="margin:0">Tu negocio creció. <em>Tus herramientas, no</em></dd></div>
+      <div><dt>Cita, pregunta · 23px / 1.25</dt><dd class="t-quote" style="margin:0">“Cargo el mismo pedido en WhatsApp, la planilla y la factura.”</dd></div>
+      <div><dt>Número KPI · 44px tabular</dt><dd class="t-kpi" style="margin:0">18 · 3 · 7</dd></div>
+      <div><dt>Lead · DM Sans 19px · --ink-2</dt><dd class="t-lead" style="margin:0">Desarrollamos software a medida, automatizaciones e inteligencia artificial para que tu negocio trabaje mejor.</dd></div>
+      <div><dt>Cuerpo · DM Sans 17px / 1.6</dt><dd class="t-body" style="margin:0">Después de la primera charla te mandamos el precio cerrado por escrito, antes de arrancar.</dd></div>
+      <div><dt>Etiqueta · mono 500 14px</dt><dd class="t-label" style="margin:0">Tecnología que conecta</dd></div>
+      <div><dt>Legal · mono 500 12px</dt><dd class="t-legal" style="margin:0">Corrientes · Resistencia — 27.47°S 58.83°W</dd></div>
+    </dl>
   </section>
 
   <section aria-labelledby="s-title">
-    <h2 id="s-title">Espaciado</h2>
-    <p class="src">styles/landing.css · grilla de 4px · valores en uso</p>
-    <div class="space">
-      <div><i style="height:4px"></i>4</div><div><i style="height:8px"></i>8</div><div><i style="height:12px"></i>12</div><div><i style="height:16px"></i>16</div><div><i style="height:20px"></i>20</div><div><i style="height:24px"></i>24</div><div><i style="height:32px"></i>32</div><div><i style="height:40px"></i>40</div><div><i style="height:48px"></i>48</div><div><i style="height:56px"></i>56</div><div><i style="height:64px"></i>64</div>
-    </div>
-  </section>
-
-  <section aria-labelledby="r-title">
-    <h2 id="r-title">Radios y sombras</h2>
-    <p class="src">styles/landing.css · styles/figures/auto.css</p>
-    <div class="radii">
-      <div><i style="border-radius:6px"></i>6 · pill</div><div><i style="border-radius:8px"></i>8 · tags</div><div><i style="border-radius:10px"></i>10 · botones</div><div><i style="border-radius:12px"></i>12 · tips</div><div><i style="border-radius:16px"></i>16 · ayuda</div><div><i style="border-radius:20px"></i>20 · tarjetas</div><div><i style="border-radius:999px"></i>999 · redondo</div>
-    </div>
-    <div class="shadows" style="margin-top:40px">
-      <div style="box-shadow:0 4px 12px rgba(30,42,47,.16)">0 4px 12px<br>rgba(30,42,47,.16)<br>botones redondos</div>
-      <div style="box-shadow:0 30px 60px -40px rgba(30,42,47,.35)">0 30px 60px -40px<br>rgba(30,42,47,.35)<br>.figure</div>
-      <div style="box-shadow:0 8px 18px -14px rgba(30,42,47,.5)">0 8px 18px -14px<br>rgba(30,42,47,.5)<br>tarjetas en figuras</div>
-      <div style="background:var(--paper);box-shadow:0 0 0 8px var(--cream)">0 0 0 8px var(--cream)<br>halo del paso</div>
+    <span class="eyebrow">03</span>
+    <h2 id="s-title">Espaciado, radios y sombras</h2>
+    <div class="row3">
+      <div class="spc" aria-label="Espaciado">
+        <div><i style="width:24px"></i>24 · margen de .wrap, padding de tarjeta</div>
+        <div><i style="width:44px"></i>44 · objetivo táctil mínimo</div>
+        <div><i style="width:64px"></i>64 · sección (mín.)</div>
+        <div><i style="width:120px"></i>120 · sección (máx.)</div>
+        <div><i style="width:200px"></i>1200 · ancho de .wrap</div>
+      </div>
+      <div class="rad" aria-label="Radios">
+        <div><i style="border-radius:0"></i>--r-surface 0 · impreso</div>
+        <div><i style="border-radius:3px"></i>--r-control 3px</div>
+        <div><i style="border-radius:14px"></i>--r-glass-sm 14px</div>
+        <div><i style="border-radius:20px"></i>--r-glass 20px · vidrio</div>
+        <div><i style="border-radius:999px;height:40px;align-self:center"></i>--r-pill</div>
+        <div><i style="border-radius:50%;width:56px;height:56px"></i>círculo · íconos</div>
+      </div>
+      <div class="shd" aria-label="Sombras">
+        <div style="box-shadow:0 30px 60px -40px rgba(32,33,31,.35);border:1px solid var(--line)">Elevación impresa<br>0 30px 60px -40px rgba(32,33,31,.35)</div>
+        <div class="glass">Vidrio<br>inset 0 1px 0 + --glass-shadow</div>
+        <div style="box-shadow:0 40px 70px -50px rgba(32,33,31,.5)">Panel CTA<br>0 40px 70px -50px rgba(32,33,31,.5)</div>
+      </div>
     </div>
   </section>
 
   <section aria-labelledby="k-title">
+    <span class="eyebrow">04</span>
     <h2 id="k-title">Componentes</h2>
-    <p class="src">styles/landing.css</p>
-    <div class="comps">
-      <div>
-        <p class="comp-title">.btn</p>
-        <div class="row"><a class="btn btn-primary" href="#k-title">Agendá una charla <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="#k-title">Ver qué hacemos</a></div>
-        <p class="comp-title" style="margin-top:24px">.mini · control redondo 44px</p>
-        <div class="row"><a class="btn btn-ghost mini" href="#k-title">Reiniciar</a>
-          <button class="round" type="button" aria-label="Anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-          <button class="round" type="button" aria-label="Siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div>
-        <p class="comp-title" style="margin-top:24px">Tags · pill</p>
-        <ul class="tags"><li>Stock</li><li>Pedidos</li><li>Clientes</li></ul>
-        <p style="margin:12px 0 0"><span class="pill">Charlamos lo necesario</span></p>
+    <div class="comp">
+      <div class="card-c">
+        <span class="eyebrow">Botones</span>
+        <div class="btns">
+          <a class="btn btn-primary" href="#k-title">Hablemos de tu proyecto <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn btn-ghost" href="#k-title">Ver los servicios</a>
+          <button class="btn btn-ghost mini" type="button">Ver de nuevo</button>
+          <button class="round" type="button" aria-label="Modo oscuro"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+        </div>
       </div>
-      <div>
-        <p class="comp-title">Tarjeta (.step .card)</p>
-        <div class="card"><div class="row" style="margin-bottom:16px"><span class="tile"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M10 5h14l6 6v24H10z"/><path d="M14 16h12M14 21h12M14 26h7"/></svg></span><span class="tile cool"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="12"/><path d="M14 20l4 4 8-8"/></svg></span></div><h3>Entendemos tu día a día</h3><p>Charlamos todo lo que haga falta para entender tu problema.</p></div>
+      <div class="card-c">
+        <span class="eyebrow">Campos y chips</span>
+        <label class="field"><span>Tu nombre</span><input placeholder="Ej.: Marta"></label>
+        <label class="field"><span>Email o WhatsApp</span><input aria-invalid="true" value="marta@"><span class="err">Revisá el email: falta el dominio.</span></label>
+        <div class="chips"><button class="chip" type="button" aria-pressed="false">Stock</button><button class="chip" type="button" aria-pressed="true">Pedidos</button><button class="chip" type="button" aria-pressed="false">Turnos</button></div>
       </div>
-      <div>
-        <p class="comp-title">Banda petrol</p>
-        <div class="band"><p>No necesitás tener la solución. Empecemos por el problema</p><a class="btn" href="#k-title">Contanos qué necesitás <span aria-hidden="true">→</span></a></div>
-        <p class="comp-title" style="margin-top:24px">Foco visible</p>
-        <a class="btn btn-ghost" href="#k-title" style="outline:3px solid var(--terra);outline-offset:3px">Tabulá hasta acá</a>
+      <div class="card-c">
+        <span class="eyebrow">Tarjeta impresa (cuadrada)</span>
+        <article class="problem"><span class="n">01</span><p class="q">“Tengo todo en planillas y nadie sabe cuál es la buena.”</p><p class="a">Lo resolvemos con software a medida: un solo lugar para stock, pedidos y clientes.</p></article>
+      </div>
+      <div class="card-c">
+        <span class="eyebrow">Vidrio sobre campo líquido</span>
+        <div class="liquid">
+          <span class="blobs" aria-hidden="true"><i></i><i></i><i></i></span>
+          <div class="gstack">
+            <div class="pill glass"><svg class="dotspin" viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><circle cx="12" cy="3.2" r="2"/><circle cx="18.2" cy="5.8" r="1.9" opacity=".2"/><circle cx="20.8" cy="12" r="1.8" opacity=".3"/><circle cx="18.2" cy="18.2" r="1.7" opacity=".4"/><circle cx="12" cy="20.8" r="1.6" opacity=".5"/><circle cx="5.8" cy="18.2" r="1.6" opacity=".6"/><circle cx="3.2" cy="12" r="1.7" opacity=".75"/><circle cx="5.8" cy="5.8" r="1.8" opacity=".9"/></g></svg>Paranexo está trabajando</div>
+            <div class="glass res"><b class="t">Pedido #1042 · listo para revisar</b><div class="tbl"><span class="th">Productos</span><span class="th">Total</span><span class="th">Entrega</span><span>14 cajas</span><span>$ 186.400</span><span>Mañana</span></div><small style="color:var(--ink-2)">Datos de ejemplo</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="card-c">
+        <span class="eyebrow">Navegación al hacer scroll</span>
+        <div class="liquid" style="min-height:0;padding:24px">
+          <span class="blobs" aria-hidden="true"><i></i><i></i><i></i></span>
+          <nav class="navpill glass" aria-label="Ejemplo de navegación"><img src="../assets/brand/logo-horizontal-color.svg" width="1080" height="227" alt="Paranexo"><a href="#k-title" aria-current="page">Servicios</a><a href="#k-title">Cómo trabajamos</a><a class="btn btn-primary" href="#k-title">Hablemos</a></nav>
+        </div>
+      </div>
+      <div class="card-c">
+        <span class="eyebrow">Contacto del footer y banda oscura</span>
+        <div class="contact">
+          <a class="mail" href="#k-title"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6l8.5 7 8.5-7"/></svg></span>hola@paranexo.com</a>
+        </div>
+        <div class="band" style="margin-top:22px"><span class="eyebrow">Quiénes somos</span><h3>Las personas detrás de cada sistema</h3><p>Banda Carbón: títulos en Marfil, acentos en naranja claro.</p></div>
       </div>
     </div>
   </section>
 </main>
-<div style="height:64px"></div>
 </body>
 </html>
