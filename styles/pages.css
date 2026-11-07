@@ -38,7 +38,7 @@
 .hero.page-hero > .blobs { --blob-op: .3; }
 /* a paper veil under the copy keeps the lead at AA while the liquid field moves around it */
 .hero.page-hero .hero-copy::before { content: ""; position: absolute; inset: -12% -8%; z-index: -1; pointer-events: none; background: radial-gradient(closest-side, color-mix(in srgb, var(--cream) 90%, transparent) 62%, transparent); }
-.hero.page-hero .lead { margin: 24px auto 32px; color: var(--ink); }
+.hero.page-hero .lead { margin: 24px auto 32px; max-width: 52ch; color: var(--ink); }
 
 /* Centered section heads */
 .sec-head-center { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 16px; text-align: center; }
