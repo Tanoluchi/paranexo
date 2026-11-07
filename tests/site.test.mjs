@@ -331,3 +331,10 @@ test('the process bridge stacks before its columns get too narrow for the step t
   assert.match(css, /\.pier \.takeaway \{[^}]*margin-top: auto/);
 });
 
+
+test('secondary service tiles start their titles on one line and keep their links on another', () => {
+  const css = readFileSync(new URL('../styles/servicios.css', import.meta.url), 'utf8');
+  assert.match(css, /\.stile \{[^}]*align-items: stretch;/);
+  assert.match(css, /\.st-text \{ display: flex; flex-direction: column; align-items: flex-start; \}/);
+  assert.match(css, /\.st-text \.link \{[^}]*margin-top: auto;/);
+});

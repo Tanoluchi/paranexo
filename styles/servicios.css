@@ -88,15 +88,17 @@
   .also { background: var(--paper); }
   .tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 16px; }
   .also .sec-head h2 { font-size: clamp(34px, 4vw, 54px); }
-  .stile { grid-column: span 6; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 24px; min-height: 236px; padding: clamp(22px, 3vw, 34px); scroll-margin-top: 96px; --frost: 58%; --b1: var(--terra-tint); --b2: var(--terra-soft); --b3: var(--paper); --blob-op: .55; box-shadow: var(--glass-shadow); transition: translate .3s var(--ease); }
+  .stile { grid-column: span 6; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: stretch; gap: 24px; min-height: 236px; padding: clamp(22px, 3vw, 34px); scroll-margin-top: 96px; --frost: 58%; --b1: var(--terra-tint); --b2: var(--terra-soft); --b3: var(--paper); --blob-op: .55; box-shadow: var(--glass-shadow); transition: translate .3s var(--ease); }
   .stile:hover { translate: 0 -4px; }
   .stile:nth-child(2) { --b1: var(--terra); --b2: var(--terra-tint); }
   .stile:nth-child(3) { --b1: var(--terra-soft); --b2: var(--terra-tint); }
   .stile:nth-child(4) { --b1: var(--terra-tint); --b2: var(--terra); }
+  /* titles start on one line and the link sits at the foot, whatever the title length */
+  .st-text { display: flex; flex-direction: column; align-items: flex-start; }
   .st-text h3 { font-size: clamp(30px, 3.2vw, 38px); line-height: 1.04; }
   .st-text p { margin: 10px 0 14px; max-width: 34ch; color: var(--ink-2); font-size: 17px; line-height: 1.5; }
-  .st-text .link { font-weight: 600; color: var(--terra-ink); }
-  .glyph { width: 112px; height: 112px; padding: 10px; border-radius: var(--r-glass); background: var(--glass-tint-strong); border: 1px solid var(--glass-rim); box-shadow: inset 0 1px 0 var(--glass-edge); }
+  .st-text .link { margin-top: auto; font-weight: 600; color: var(--terra-ink); }
+  .glyph { align-self: start; width: 112px; height: 112px; padding: 10px; border-radius: var(--r-glass); background: var(--glass-tint-strong); border: 1px solid var(--glass-rim); box-shadow: inset 0 1px 0 var(--glass-edge); }
   .glyph .ln { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
   .glyph .fl { fill: var(--terra); }
   .glyph .soft { fill: color-mix(in srgb, var(--ink) 12%, transparent); }
@@ -133,7 +135,7 @@
     .ex-card { position: relative; top: auto; }
   }
   @media (max-width: 640px) {
-    .stile { grid-template-columns: minmax(0, 1fr); gap: 16px; min-height: 0; }
+    .stile { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; gap: 16px; min-height: 0; }
     .stile .glyph { order: -1; width: 88px; height: 88px; }
     .chips { gap: 6px; }
     .chips a { padding: 0 14px; font-size: 14.5px; }
