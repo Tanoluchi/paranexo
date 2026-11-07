@@ -256,7 +256,6 @@ test('the shared brand keeps its kit accents and uses Bricolage Grotesque and DM
   for (const page of [html, readFileSync(new URL('../servicios/index.html', import.meta.url), 'utf8'), readFileSync(new URL('../contacto/index.html', import.meta.url), 'utf8')]) {
     assert.match(page, /assets\/brand\/logo-horizontal-color\.svg/);
     assert.match(page, /assets\/brand\/logo-horizontal-color-dark\.svg/);
-    assert.match(page, /<link rel="icon" href="[^"]*assets\/favicon\.svg">/);
     assert.match(page, /styles\/glass\.css/);
   }
   const styles = css('landing.css');
@@ -345,3 +344,12 @@ test('pages preload only the fonts they use and the retired fonts are gone', () 
     assert.ok(!existsSync(new URL(`../assets/fonts/${file}`, import.meta.url)), file);
   }
 });
+
+test('every page shows the approved brand favicon in the tab', () => {
+  for (const page of PAGES) {
+    assert.match(read(page.out), /<link rel="icon" type="image\/svg\+xml" href="[^"]*assets\/brand\/favicon\.svg">/, page.out);
+  }
+  // the pre-kit petrol bridge icon is gone
+  assert.ok(!existsSync(new URL('../assets/favicon.svg', import.meta.url)));
+});
+

@@ -18,7 +18,7 @@ const walk = dir => readdirSync(dir).flatMap(name => {
 const files = walk(out).map(path => relative(out, path));
 
 test('the published folder holds the pages and what they load', () => {
-  for (const file of ['index.html', 'hablemos.html', 'contacto/index.html', 'privacidad.html', 'sitemap.xml', 'assets/hero-puente-v2.jpg', 'styles/landing.css', 'src/landing.mjs', 'src/contact-message.mjs', 'servicios/software-a-medida/index.html', 'servicios/automatizaciones/index.html', 'servicios/inteligencia-artificial/index.html']) {
+  for (const file of ['index.html', '404.html', 'hablemos.html', 'contacto/index.html', 'privacidad.html', 'sitemap.xml', 'assets/hero-puente-v2.jpg', 'styles/landing.css', 'src/landing.mjs', 'src/contact-message.mjs', 'servicios/software-a-medida/index.html', 'servicios/automatizaciones/index.html', 'servicios/inteligencia-artificial/index.html']) {
     assert.ok(files.includes(file), `missing ${file}`);
   }
 });

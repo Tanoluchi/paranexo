@@ -31,9 +31,9 @@ function fill(html, values) {
 }
 
 function render(page) {
-  const base = '../'.repeat(page.depth ?? 0) || './';
-  // Figures are shared fragments; only the marker of a page that shows one is replaced.
-  let body = page.body;
+  // "base" overrides the depth-relative prefix: the 404 page is served at any path, so it links from the root
+  const base = page.base ?? ('../'.repeat(page.depth ?? 0) || './');
+  const body = page.body;
 
   const extraHead = (page.styles ?? []).map(style => `<link rel="stylesheet" href="${base}styles/${style}">`).join('\n');
   const scripts = ['src/theme.mjs', 'src/nav.mjs', 'src/page.mjs', ...(page.scripts ?? [])]
@@ -56,6 +56,8 @@ function render(page) {
     BASE: base,
     EXTRA_HEAD: extraHead,
     PAGE_URL: urlOf(page.out),
+    // pages kept out of search (index: false) get noindex instead of a canonical URL
+    INDEXING: page.index === false ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${urlOf(page.out)}">`,
     TITLE: page.title,
     DESCRIPTION: page.description,
     OG_TITLE: page.ogTitle ?? page.title,

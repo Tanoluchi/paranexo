@@ -17,6 +17,7 @@ test('every page ships one h1, the shared nav and its own canonical url', () => 
     assert.equal((html.match(/<h1[\s>]/g) ?? []).length, 1, `${page.out} must have exactly one h1`);
     assert.match(html, /<nav class="nav" aria-label="Principal">/, `${page.out} must carry the shared nav`);
     assert.match(html, /<footer/, `${page.out} must carry the shared footer`);
+    if (page.index === false) continue;
     const url = SITE + (page.out === 'index.html' ? '' : page.out.replace(/index\.html$/, ''));
     assert.ok(html.includes(`<link rel="canonical" href="${url}">`), `${page.out} must point canonical at ${url}`);
     assert.ok(html.includes(`<meta property="og:url" content="${url}">`), `${page.out} must point og:url at ${url}`);
@@ -24,8 +25,8 @@ test('every page ships one h1, the shared nav and its own canonical url', () => 
 });
 
 test('the footer links the pages that exist, from any depth', () => {
-  for (const { out, depth } of PAGES) {
-    const base = '../'.repeat(depth) || './';
+  for (const { out, depth, base: fixed } of PAGES) {
+    const base = fixed ?? ('../'.repeat(depth) || './');
     const html = read(out);
     const footer = html.slice(html.indexOf('<footer'));
     for (const page of ['servicios/', 'como-trabajamos/', 'servicios/#software', 'servicios/#automatizaciones', 'servicios/#ia']) {
@@ -35,22 +36,45 @@ test('the footer links the pages that exist, from any depth', () => {
   }
 });
 
-test('no internal link, stylesheet or script points at a file that does not exist', () => {
+test('no internal link, stylesheet or script points at a file or section that does not exist', () => {
   const missing = [];
+  const ids = file => new Set([...readFileSync(file, 'utf8').matchAll(/\sid="([^"]+)"/g)].map(m => m[1]));
   for (const page of PAGES) {
     // comments hold authoring hints such as the future team photos, not live references
     const html = read(page.out).replace(/<!--[\s\S]*?-->/g, '');
     const dir = dirname(join(root, page.out));
     for (const [, ref] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
-      if (/^(#|https?:|mailto:|tel:|data:)/.test(ref)) continue;
-      const [path] = ref.split('#');
-      if (!path) continue;
-      const target = join(dir, path);
-      const ok = existsSync(target) || existsSync(join(target, 'index.html'));
-      if (!ok) missing.push(`${page.out} -> ${ref}`);
+      if (/^(https?:|mailto:|tel:|data:)/.test(ref)) continue;
+      const [path, hash] = ref.split('#');
+      let file = join(root, page.out);
+      if (path) {
+        // root-absolute links (the 404 page) resolve from the site root
+        const target = path.startsWith('/') ? join(root, path) : join(dir, path);
+        file = existsSync(join(target, 'index.html')) ? join(target, 'index.html') : target;
+        if (!existsSync(file)) { missing.push(`${page.out} -> ${ref}`); continue; }
+      }
+      // a link to a section must land on an element with that id
+      if (hash && file.endsWith('.html') && !ids(file).has(hash)) missing.push(`${page.out} -> ${ref} (no #${hash})`);
     }
   }
   assert.deepEqual(missing, []);
+});
+
+test('unknown URLs get a real 404 page that is never indexed and works from any depth', () => {
+  const page = PAGES.find(p => p.out === '404.html');
+  assert.ok(page, 'src/pages must define 404.html');
+  assert.equal(page.sitemap, false);
+  const html = read('404.html');
+  assert.match(html, /<meta name="robots" content="noindex">/);
+  assert.doesNotMatch(html, /rel="canonical"/);
+  assert.doesNotMatch(read('sitemap.xml'), /404/);
+  // served at any path, so every internal reference is root-absolute
+  for (const [, ref] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
+    if (/^(https?:|mailto:|#)/.test(ref)) continue;
+    assert.match(ref, /^\//, `404.html must use root-absolute paths, found ${ref}`);
+  }
+  assert.match(html, /<h1>Esta página no existe<\/h1>/);
+  assert.match(html, /href="\/">Ir al inicio/);
 });
 
 test('the sitemap lists every published page and leaves the hablemos.html redirect out', () => {
@@ -93,7 +117,7 @@ test('the process page keeps the five steps in order', () => {
 
 test('the nav points at the hub pages from every depth', () => {
   for (const page of PAGES) {
-    const base = '../'.repeat(page.depth ?? 0) || './';
+    const base = page.base ?? ('../'.repeat(page.depth ?? 0) || './');
     const html = read(page.out);
     assert.ok(html.includes(`<a href="${base}servicios/">Servicios</a>`), `${page.out} nav must resolve to ${base}servicios/`);
     assert.ok(html.includes(`<a href="${base}como-trabajamos/">Cómo trabajamos</a>`), `${page.out} nav must resolve to ${base}como-trabajamos/`);
@@ -106,7 +130,7 @@ test('every page loads the shared page module, which runs its own reveal and dem
   assert.match(js, /^initPage\(\);$/m);
   for (const page of PAGES) {
     const html = read(page.out);
-    const base = '../'.repeat(page.depth ?? 0) || './';
+    const base = page.base ?? ('../'.repeat(page.depth ?? 0) || './');
     assert.ok(html.includes(`src="${base}src/page.mjs"`), `${page.out} must load ${base}src/page.mjs`);
   }
 });
