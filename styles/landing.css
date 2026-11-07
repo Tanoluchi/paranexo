@@ -164,6 +164,8 @@
   #problemas { padding-top: 0; }
   /* home CTA: the FAQ section already carries the bottom gap (keep other pages' .cta spacing) */
   #hablemos { padding-top: 0; }
+  /* the FAQ follows the problems section, which already carries the gap between them */
+  #preguntas { padding-top: 0; }
   .sec-head { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; margin-bottom: clamp(32px, 5vw, 64px); }
   .sec-head .eyebrow { display: block; margin-bottom: 16px; }
 

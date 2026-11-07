@@ -335,3 +335,15 @@ test('the Services page links the process page instead of repeating it and keeps
   assert.doesNotMatch(pages, /\.also ul/);
   assert.match(css, /\.stile \{ grid-column: span 6;/);
 });
+
+test('home sections keep one rhythm: a section that follows another drops its top padding', () => {
+  const css = readFileSync(new URL('../styles/landing.css', import.meta.url), 'utf8');
+  for (const id of ['problemas', 'preguntas', 'hablemos']) assert.match(css, new RegExp(`#${id}[^{]*\\{ padding-top: 0; \\}|#${id},`), id);
+});
+
+test('the process bridge stacks before its columns get too narrow for the step titles', () => {
+  const css = readFileSync(new URL('../styles/pages.css', import.meta.url), 'utf8');
+  assert.match(css, /@media \(max-width: 1100px\) \{\s*\.bridge \{ grid-template-columns: minmax\(0, 1fr\)/);
+  // the takeaway sits on the same line in every column, whatever the title length
+  assert.match(css, /\.pier \.takeaway \{[^}]*margin-top: auto/);
+});

@@ -52,12 +52,12 @@
 .pier .you { grid-area: you; margin: 0; padding: 24px 20px 28px; background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.5; }
 .pier:first-child .you { border-radius: var(--r-control) 0 0 0; }
 .pier:last-child .you { border-radius: 0 var(--r-control) 0 0; }
-.pier .stop { grid-area: stop; position: relative; padding: 32px 20px 24px; }
+.pier .stop { grid-area: stop; position: relative; display: flex; flex-direction: column; align-items: flex-start; padding: 32px 20px 24px; }
 .pier .stop::before { content: ""; position: absolute; top: -1px; left: 0; right: 0; height: 3px; background: var(--terra); transform-origin: left; }
 .pier .stop::after { content: ""; position: absolute; top: -7px; left: 20px; width: 15px; height: 15px; border-radius: 50%; background: var(--cream); border: 3px solid var(--terra); }
 .pier .n { display: block; margin-bottom: 10px; font: 600 13px/1 var(--mono); color: var(--terra-ink); }
-.pier h3 { margin: 0; font: 400 clamp(22px, 2vw, 27px)/1.15 var(--serif); text-wrap: balance; }
-.pier .takeaway { display: inline-flex; align-items: center; min-height: 32px; margin-top: 14px; padding: 0 12px; border-radius: var(--r-pill); background: var(--terra-tint); color: var(--terra-ink); font: 600 14px/1.2 var(--sans); }
+.pier h3 { margin: 0 0 14px; font: 400 clamp(22px, 2vw, 27px)/1.15 var(--serif); text-wrap: balance; }
+.pier .takeaway { display: inline-flex; align-items: center; min-height: 32px; margin-top: auto; padding: 0 12px; white-space: nowrap; border-radius: var(--r-pill); background: var(--terra-tint); color: var(--terra-ink); font: 600 14px/1.2 var(--sans); }
 .pier .us { grid-area: us; margin: 0; padding: 4px 20px 0; color: var(--ink-2); font-size: 16px; line-height: 1.55; }
 .pier .bank { display: block; margin-bottom: 6px; font: 600 12px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--terra-ink); }
 /* on wide screens a legend names the banks once; each pier keeps its names for screen readers */
@@ -73,7 +73,8 @@
   .js .bridge.in .stop::before { transform: none; }
 }
 
-@media (max-width: 900px) {
+/* below 1100px five columns are too narrow for "Implementamos": the deck turns vertical */
+@media (max-width: 1100px) {
   .bridge { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
   .pier { grid-row: auto; grid-template-rows: none; grid-template-areas: "stop" "you" "us"; position: relative; padding: 0 0 32px 32px; border-left: 3px solid var(--terra); }
   .pier:last-child { padding-bottom: 0; border-left-color: transparent; }
@@ -84,6 +85,9 @@
   .pier .us { padding: 14px 0 0; }
   .banks { display: none; }
   .pier .bank { position: static; width: auto; height: auto; overflow: visible; clip: auto; white-space: normal; }
+}
+
+@media (max-width: 900px) {
   .hub-cards { grid-template-columns: 1fr; }
   .split { grid-template-columns: 1fr; }
   .split .figure { position: static; }
