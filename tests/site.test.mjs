@@ -347,3 +347,14 @@ test('the process bridge stacks before its columns get too narrow for the step t
   // the takeaway sits on the same line in every column, whatever the title length
   assert.match(css, /\.pier \.takeaway \{[^}]*margin-top: auto/);
 });
+
+test('every carousel example starts at the same height in its card', () => {
+  const css = readFileSync(new URL('../styles/servicios.css', import.meta.url), 'utf8');
+  // examples anchor to the top of their area instead of centering by their own height
+  assert.match(css, /\n  \.demo \{[^}]*align-content: start;/);
+  assert.doesNotMatch(css, /\.d-web \{ align-content: center; \}/);
+  // one-line titles reserve two lines so their example does not rise
+  assert.match(css, /\.svc-card h3 \{[^}]*min-height: 2\.2em/);
+  // diagrams carry inner air around their nodes; the carousel compensates it
+  assert.match(css, /\.svc-card \.flow, \.svc-card \.tiles-int \{ margin-top: -27px; \}/);
+});
