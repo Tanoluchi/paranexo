@@ -32,7 +32,7 @@
   /* Liquid: soft blurred colour fields that slowly morph behind a surface.
      Text never sits on a raw blob: a frosted layer (.frost) or a glass panel always goes between. */
   .liquid { position: relative; isolation: isolate; overflow: hidden; border-radius: var(--r-glass); background: var(--paper); }
-  .blobs { position: absolute; inset: 0; z-index: -2; pointer-events: none; }
+  .blobs { position: absolute; inset: 0; z-index: -2; pointer-events: none; overflow-x: clip; }
   .blobs i { position: absolute; width: 62%; aspect-ratio: 1; border-radius: 50% 50% 45% 55% / 55% 45% 55% 45%; filter: blur(34px); opacity: var(--blob-op); animation: ooze 18s ease-in-out infinite alternate; will-change: transform; }
   .blobs i:nth-child(1) { left: -12%; top: -34%; background: var(--b1, var(--river)); }
   .blobs i:nth-child(2) { right: -14%; top: 6%; width: 54%; background: var(--b2, var(--terra)); animation-duration: 23s; animation-delay: -7s; }

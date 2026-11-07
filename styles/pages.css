@@ -16,13 +16,6 @@
 .hub-card p { margin: 0; color: var(--ink-2); font-size: 16px; }
 .hub-card .link { margin-top: auto; padding-top: 8px; }
 
-.also { padding: clamp(40px, 6vw, 72px) 0 0; }
-.also h2 { font: 400 clamp(26px, 2.6vw, 35px)/1.15 var(--serif); margin: 0 0 8px; }
-.also p { margin: 0 0 20px; color: var(--ink-2); max-width: 62ch; }
-.also ul { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 0; margin: 0; }
-.also li { border-top: 1px solid var(--line); padding-top: 14px; }
-.also b { display: block; font-size: 17px; }
-.also span { color: var(--ink-2); font-size: 15px; }
 
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 64px); align-items: start; padding: clamp(40px, 6vw, 72px) 0 0; }
 .split h2 { font: 400 clamp(23px, 2.3vw, 30px)/1.2 var(--serif); margin: 32px 0 12px; }
@@ -47,8 +40,7 @@
 .rail .result { display: inline-block; margin-top: 12px; font-size: 14px; color: var(--river-ink); border: 1px solid var(--line); border-radius: var(--r-pill); padding: 4px 10px; }
 
 @media (max-width: 900px) {
-  .hub-cards, .also ul { grid-template-columns: 1fr; }
-  .also ul { gap: 20px; }
+  .hub-cards { grid-template-columns: 1fr; }
   .split { grid-template-columns: 1fr; }
   .split .figure { position: static; }
   .rail li { grid-template-columns: 40px 1fr; }

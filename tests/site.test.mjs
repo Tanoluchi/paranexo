@@ -322,3 +322,16 @@ test('footer motion rests off screen and is static under reduced motion', () => 
   const page = readFileSync(new URL('../src/page.mjs', import.meta.url), 'utf8');
   assert.match(page, /initFooter\(\)/);
 });
+
+test('the Services page links the process page instead of repeating it and keeps its secondary tiles equal', () => {
+  const hub = readFileSync(new URL('../servicios/index.html', import.meta.url), 'utf8');
+  const css = readFileSync(new URL('../styles/servicios.css', import.meta.url), 'utf8');
+  const pages = readFileSync(new URL('../styles/pages.css', import.meta.url), 'utf8');
+  assert.doesNotMatch(hub, /class="steps5|href="#como"/);
+  assert.match(hub, /class="how-band[\s\S]*?href="\.\.\/como-trabajamos\/"/);
+  assert.match(hub, /class="sec-head sec-head-center[^"]*"[\s\S]*?id="tres-title"/);
+  assert.doesNotMatch(hub, /class="stile[^"]*\bs[57]\b/);
+  // the generic .also list styles must not override the Services tile grid
+  assert.doesNotMatch(pages, /\.also ul/);
+  assert.match(css, /\.stile \{ grid-column: span 6;/);
+});
