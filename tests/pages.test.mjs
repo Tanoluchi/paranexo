@@ -28,7 +28,7 @@ test('the footer links the pages that exist, from any depth', () => {
     const base = '../'.repeat(depth) || './';
     const html = read(out);
     const footer = html.slice(html.indexOf('<footer'));
-    for (const page of ['servicios/', 'como-trabajamos/', 'servicios/software-a-medida/', 'servicios/automatizaciones/', 'servicios/inteligencia-artificial/']) {
+    for (const page of ['servicios/', 'como-trabajamos/', 'servicios/#software', 'servicios/#automatizaciones', 'servicios/#ia']) {
       assert.ok(footer.includes(`href="${base}${page}"`), `${out} footer must link ${base}${page}`);
     }
     assert.doesNotMatch(footer, /index\.html#que-hacemos|index\.html#como-trabajamos/, out);
@@ -64,33 +64,19 @@ test('the sitemap lists every published page and leaves the hablemos.html redire
   assert.match(read('hablemos.html'), /http-equiv="refresh" content="0; url=\.\/contacto\/"/);
 });
 
-test('each service page shows its own demo and links the other two', () => {
-  const services = [
-    { out: 'servicios/software-a-medida/index.html', figure: 'software', others: ['automatizaciones', 'inteligencia-artificial'] },
-    { out: 'servicios/automatizaciones/index.html', figure: 'auto', others: ['software-a-medida', 'inteligencia-artificial'] },
-    { out: 'servicios/inteligencia-artificial/index.html', figure: 'ai', others: ['software-a-medida', 'automatizaciones'] },
-  ];
-  for (const service of services) {
-    const html = read(service.out);
-    assert.match(html, new RegExp(`<main id="contenido" data-figure="${service.figure}">`), `${service.out} must load the ${service.figure} demo`);
-    assert.match(html, /class="figure"/, `${service.out} must render the demo frame`);
-    // the shared Anatomy kit must load before the figure's own palette, or every shape falls back to black
-    assert.match(html, /href="\.\.\/\.\.\/styles\/figures\/iso\.css"/, `${service.out} must load the shared figure kit`);
-    assert.ok(
-      html.indexOf('styles/figures/iso.css') < html.indexOf(`styles/figures/${service.figure}.css`),
-      `${service.out} must load figures/iso.css before figures/${service.figure}.css`,
-    );
-    for (const other of service.others) {
-      assert.ok(html.includes(`href="../../servicios/${other}/"`), `${service.out} must link ../../servicios/${other}/`);
-    }
+test('the old service pages are gone and their URLs redirect to their Services section', () => {
+  const redirects = { 'software-a-medida': 'software', automatizaciones: 'automatizaciones', 'inteligencia-artificial': 'ia' };
+  assert.ok(!PAGES.some(page => /^servicios\/.+\/index\.html$/.test(page.out)), 'no generated service subpage');
+  for (const id of ['software', 'automatizaciones', 'ia']) assert.ok(!existsSync(join(root, `src/pages/servicio-${id}.html`)), `servicio-${id}.html`);
+  for (const [slug, id] of Object.entries(redirects)) {
+    const html = read(`servicios/${slug}/index.html`);
+    assert.match(html, /<meta name="robots" content="noindex">/);
+    assert.match(html, new RegExp(`http-equiv="refresh" content="0; url=\\.\\./#${id}"`));
+    assert.match(html, new RegExp(`<link rel="canonical" href="https://paranexo\\.com/servicios/">`));
+    assert.doesNotMatch(read('sitemap.xml'), new RegExp(`servicios/${slug}/`));
   }
-});
-
-test('the hub links every service page', () => {
-  const hub = read('servicios/index.html');
-  for (const slug of ['software-a-medida', 'automatizaciones', 'inteligencia-artificial']) {
-    assert.ok(hub.includes(`href="../servicios/${slug}/"`), `hub must link ../servicios/${slug}/`);
-  }
+  // nothing on the site links the removed pages any more
+  for (const page of PAGES) assert.doesNotMatch(read(page.out), /servicios\/(software-a-medida|automatizaciones|inteligencia-artificial)\//, page.out);
 });
 
 test('the process page keeps the five steps in order', () => {

@@ -22,15 +22,12 @@ test('landing exposes the canvas page-one structure', () => {
   for (const pattern of [
     /class="wrap faq-grid/,
   ]) assert.match(html, pattern);
-  // the three demos live on their service pages, not on the home
   assert.doesNotMatch(html, /id="fig-(ba|flow|bot)"/);
   assert.doesNotMatch(html, /id="que-hacemos"/);
-  for (const name of ['software', 'auto', 'ai']) {
-    assert.ok(existsSync(new URL(`../src/figures/${name}.mjs`, import.meta.url)));
-    assert.ok(existsSync(new URL(`../styles/figures/${name}.css`, import.meta.url)));
-  }
-  // every figure shares one kit, so a page that loads a single figure still gets its colours
-  assert.ok(existsSync(new URL('../styles/figures/iso.css', import.meta.url)));
+  // the isometric figures only lived on the removed service pages
+  assert.ok(!existsSync(new URL('../src/figures', import.meta.url)));
+  assert.ok(!existsSync(new URL('../styles/figures', import.meta.url)));
+  assert.doesNotMatch(readFileSync(new URL('../src/page.mjs', import.meta.url), 'utf8'), /figures/);
 });
 
 test('every contact call to action opens a separate, honest three-step form', () => {
@@ -57,7 +54,7 @@ test('both pages share one token set and the same button components', () => {
 });
 
 test('white text never sits on the light terra (3.93:1); it uses the AA terra ink', () => {
-  for (const file of ['landing.css', 'contact.css', 'figures/auto.css', 'figures/ai.css', 'figures/software.css']) {
+  for (const file of ['landing.css', 'contact.css', 'servicios.css', 'pages.css']) {
     for (const rule of css(file).match(/\{[^{}]*\}/g)) {
       assert.ok(!(/background: ?var\(--terra\)[;\s]/.test(rule) && /color: ?#fff\b/.test(rule)), `${file}: ${rule.slice(0, 90)}`);
     }
@@ -290,7 +287,7 @@ test('the footer is the Paseo del Paraná band with a working mail contact, colu
   assert.match(footer, /class="foot-mail" href="mailto:hola@paranexo\.com"/);
   assert.match(footer, /href="#i-mail"/);
   assert.doesNotMatch(footer, /href="#"|data-todo=/);
-  assert.match(footer, /href="\.\/servicios\/software-a-medida\/"/);
+  assert.match(footer, /href="\.\/servicios\/#software"/);
   assert.match(footer, /href="\.\/privacidad\.html"/);
   assert.match(footer, /27\.47°S 58\.83°W/);
   assert.match(footer, /Hecho en el NEA, Argentina/);

@@ -16,14 +16,15 @@ const pages = build();
 
 rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
-// hablemos.html is only the redirect kept for links shared before the move to /contacto/
-for (const file of [...pages, 'sitemap.xml', 'hablemos.html']) {
+// redirects kept for links shared before a page moved: hablemos.html to /contacto/, the old service pages to their Services section
+const redirects = ['hablemos.html', ...['software-a-medida', 'automatizaciones', 'inteligencia-artificial'].map(slug => `servicios/${slug}/index.html`)];
+for (const file of [...pages, 'sitemap.xml', ...redirects]) {
   mkdirSync(dirname(join(out, file)), { recursive: true });
   cpSync(join(root, file), join(out, file));
 }
 for (const dir of ['assets', 'styles']) cpSync(join(root, dir), join(out, dir), { recursive: true });
 // GitHub Pages serves this artifact on the custom domain only while the artifact declares it
 writeFileSync(join(out, 'CNAME'), 'paranexo.com\n');
-// browser modules only: the template and the figure HTML are build inputs
+// browser modules only: the HTML templates are build inputs
 cpSync(join(root, 'src'), join(out, 'src'), { recursive: true, filter: path => !path.endsWith('.html') });
 console.log(`Site built in ${relative(root, out) || out}`);

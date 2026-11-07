@@ -1,4 +1,4 @@
-// Builds every page from src/pages/, src/partials/ and src/figures/.
+// Builds every page from src/pages/ and src/partials/.
 // A page file starts with a `<!-- page {...} -->` config block; the rest is its body.
 // Also writes sitemap.xml, so the page list cannot drift from what is published.
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
@@ -33,7 +33,7 @@ function fill(html, values) {
 function render(page) {
   const base = '../'.repeat(page.depth ?? 0) || './';
   // Figures are shared fragments; only the marker of a page that shows one is replaced.
-  let body = page.body.replace(/<!-- FIGURE_(SOFTWARE|AUTO|AI) -->/g, (_, name) => read(`src/figures/${name.toLowerCase()}.html`));
+  let body = page.body;
 
   const extraHead = (page.styles ?? []).map(style => `<link rel="stylesheet" href="${base}styles/${style}">`).join('\n');
   const scripts = ['src/theme.mjs', 'src/nav.mjs', 'src/page.mjs', ...(page.scripts ?? [])]
